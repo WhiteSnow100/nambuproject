@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "npm init -y \r npm i express nodemon pg sequelize sequelize-clinp\r npm i jest\r npx sequelize-cli init",
+  "description": "npm init -y \r npm i express nodemon pg sequelize sequelize-cli\r npm i jest\r npx sequelize-cli init",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
