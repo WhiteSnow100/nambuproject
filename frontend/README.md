@@ -1,5 +1,5 @@
 # src>components 폴더 생성
-
+# clone한 경우 npm install 필요
 
 
 # Getting Started with Create React App

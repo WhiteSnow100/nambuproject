@@ -8,6 +8,9 @@
 # Sequelize CLI(The Sequelize command line interface) : 데이터베이스 작업을 할 수 있는 툴 (마이그레이션, 시드, 모델)
 npm init -y 
 npm i express nodemon pg sequelize sequelize-cli
+
+# clone 한 경우는 
+npm i 
 # npm i jest
 
 # sequelize init 을 하게되면, 몇가지 폴더(config, migrations, models, seeders)와, 파일들이 생성
