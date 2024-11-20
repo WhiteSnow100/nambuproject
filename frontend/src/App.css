@@ -1,38 +1,63 @@
-.App {
+/* App.css */
+.app {
+  font-family: Arial, sans-serif;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* 상단 영역 스타일 */
+.header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-left p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.header-right button {
+  margin-left: 10px;
+}
+
+/* 중간 영역 스타일 */
+.menu {
+  background-color: #e9ecef;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.menu li {
+  margin: 0 15px;
+  font-weight: bold;
+}
+
+/* 하단 영역 스타일 */
+.main-content {
+  padding: 20px;
+}
+
+.features button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
   color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.features button:hover {
+  background-color: #0056b3;
 }
