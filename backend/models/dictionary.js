@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         c_id: {
             type: DataTypes.INTEGER, // INTEGER 타입
             allowNull: true,
-            references: { // 외래키 설정
-                model: 'categories', // Category 테이블 이름 (소문자로 맞춰야 할 수 있음)
+            references: { // 외래 키 설정
+                model: 'categorys', // Category 테이블 이름 (소문자로 맞춤)
                 key: 'c_id', // Category 테이블의 c_id 컬럼
             },
-            onUpdate: 'CASCADE', // 부모 테이블 수정 시 업데이트 반영
+            onUpdate: 'CASCADE', // 부모 데이터 변경 시 연쇄 반영
             onDelete: 'SET NULL', // 부모 데이터 삭제 시 NULL로 설정
         },       
         memo: {

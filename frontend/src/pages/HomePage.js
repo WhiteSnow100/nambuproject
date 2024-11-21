@@ -1,29 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+// import React, { useState, useEffect } from "react";
+// import { Link } from "react-router-dom";
 
-import Header from "./components/Header";
-import HomeBody from "./components/HomeBody";
-import Word from "Challenge";
-import Challenge from "Challenge";
-import Dictionary from "Challenge";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
+import Header from "../components/Header";
+import HomePageBody from "../components/HomePageBody";
+
+import Login from "./Challenge";
+import Signup from "./Challenge";
+
+import Word from "./Challenge"; //  ./WordInput
+import Challenge from "./Challenge";
+import Dictionary from "./Challenge"; // ./Dictionary
 
 const HomePage = () => {
-  const { user, totals, home, logout } = useAuth(); 
-  
   return (
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/말입력" element={<Word />} />
-            <Route path="/암기" element={<Challenge />} />
-            <Route path="/사전" element={<Dictionary />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
+    <Router>
+      {/* Header는 항상 유지 */}
+      <Header />
+      <div /*className="body-container"*/>
+        {/* Body 부분만 페이지 별로 변경 */}
+        <Routes>
+          <Route path="/" element={<HomePageBody />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/word" element={<Word />} />
+          <Route path="/dictionary" element={<Dictionary />} />
+          <Route path="/challenge" element={<Challenge />} />          
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

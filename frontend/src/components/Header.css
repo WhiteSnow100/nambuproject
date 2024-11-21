@@ -1,0 +1,25 @@
+/* 상단 영역 스타일 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .header-left p {
+    margin: 0;
+    font-size: 1rem;
+  }
+  
+  .header-right button {
+    margin-left: 10px;
+  }
+
+  .header-link {
+    margin: 0 1rem;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+}

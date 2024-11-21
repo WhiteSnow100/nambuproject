@@ -4,56 +4,39 @@
 // . LogOut : 사용자초기화하고 Home 링크
 import React from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import './Header.css'; // 스타일링은 별도의 CSS 파일에서 관리
 
-const styles = {
-    header: {
-      backgroundColor: "#282c34",
-      padding: "1rem",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      color: "white",
-    },
-    link: {
-      margin: "0 1rem",
-      color: "white",
-      textDecoration: "none",
-      fontSize: "1.2rem",
-    },
-  };
- 
 const Header = () => {
-    const { user, totalword, zerocount, logout } = useAuth();
-    if (!user) {
-        <header style={styles.header}>
-        <nav>
-            <Link to="/HomePage" style={styles.link}>
-            Home
-            </Link>
-            <Link to="/HomePage" style={styles.link}>
-            Login
-            </Link>
-            <Link to="/HomePage" style={styles.link}>
-            가입하기
-            </Link>            
-        </nav>
-        </header>
-    }else{
-        <header style={styles.header}>
-        <nav>
-            <div>user</div>
-            <div>totalword</div>
-            <div>zerocount</div>
-            <Link to="/HomePage" style={styles.link}>
-                Home
-            </Link>
-            <Link to="/HomePage" style={styles.link}>
-                Logout
-            </Link>
-        </nav>
-        </header> 
-    }
+    // const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+      localStorage.clear(); // 토큰 초기화
+      navigate("/"); // 홈으로 이동
+    };
+
+    const user = null;
+
+    return (
+      <header style={{ height: "50px", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 20px", backgroundColor: "#4285f4", color: "white" }}>
+        {user ? (
+          <>
+            <span>사용자</span>
+            <div>
+              <Link to="/" style={{ margin: "0 10px", color: "white", textDecoration: "none" }}>홈</Link>
+              <button onClick={handleLogout} style={{ background: "none", border: "none", color: "white", cursor: "pointer" }}>로그아웃</button>
+            </div>
+          </>
+        ) : (
+          <div>
+            <Link to="/" style={{ margin: "0 10px", color: "white", textDecoration: "none" }}>홈</Link>
+            <Link to="/login" style={{ margin: "0 10px", color: "white", textDecoration: "none" }}>로그인</Link>
+            <Link to="/signup" style={{ margin: "0 10px", color: "white", textDecoration: "none" }}>회원가입</Link>
+          </div>
+        )}
+      </header>
+    );
   };
-  
+
 export default Header;

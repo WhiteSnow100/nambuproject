@@ -5,15 +5,15 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [totalword, setTotalword] = useState(0);
-  const [zerocount, setZerocount] = useState(0);
+  // const [totalword, setTotalword] = useState(0);
+  // const [zerocount, setZerocount] = useState(0);
 
   // 로그인 함수
   const login = async ({ email, pw }) => {
     try {
       const resp = await axiosInstance.post("/auth/login", { email, pw });
-      const { user, accessToken, refreshToken, totalword, zerocount } = resp.data;
-      setUser({ user, accessToken, refreshToken, totalword, zerocount });
+      const { user, accessToken, refreshToken } = resp.data;
+      setUser({ user, accessToken, refreshToken });
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
     } catch (error) {
@@ -43,8 +43,8 @@ export const AuthProvider = ({ children }) => {
           user: resp.data.user,
           accessToken,
           refreshToken,
-          totalword: resp.data.totalword,
-          zerocount: resp.data.zerocount,
+          // totalword: resp.data.totalword,
+          // zerocount: resp.data.zerocount,
         });
       }
     } catch (error) {
@@ -58,8 +58,8 @@ export const AuthProvider = ({ children }) => {
           user: resp.data.user,
           accessToken: newAccessToken,
           refreshToken,
-          totalword: resp.data.totalword,
-          zerocount: resp.data.zerocount,          
+          // totalword: resp.data.totalword,
+          // zerocount: resp.data.zerocount,          
         });
         localStorage.setItem("accessToken", newAccessToken);
       } catch (refreshError) {
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, totalword, zerocount, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
