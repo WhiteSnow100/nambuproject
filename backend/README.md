@@ -10,7 +10,7 @@ npm init -y
 npm i express nodemon pg sequelize sequelize-cli
 
 # clone 한 경우는 
-npm i 
+npm install
 # npm i jest
 
 # sequelize init 을 하게되면, 몇가지 폴더(config, migrations, models, seeders)와, 파일들이 생성
@@ -28,3 +28,24 @@ create table users (
     name varchar,
     address varchar 
 )
+
+backend/
+├── node_modules/           # NPM 패키지가 설치되는 폴더
+├── controllers/            # API 비즈니스 로직
+│   ├── userController.js   # 사용자 관련 API 로직
+│   ├── dictionaryController.js # 사전 관련 API 로직
+│   └── loginController.js  # 로그인 관련 API 로직
+├── models/                 # Sequelize 모델 (DB 테이블)
+│   ├── index.js            # Sequelize 모델 초기화
+│   ├── user.js             # user 테이블 모델
+│   ├── dictionary.js       # dictionary 테이블 모델
+│   └── category.js         # category 테이블 모델
+│   └── login.js            # login 테이블 모델
+├── routes/                 # API 라우트
+│   ├── userRoutes.js       # 사용자 관련 라우트
+│   ├── dictionaryRoutes.js # 사전 관련 라우트
+│   └── loginRoutes.js      # 로그인 관련 라우트
+├── index.js               # 서버 실행 및 라우트 연결
+├── .env                   # 환경 변수 파일 (DB 연결 정보 등)
+├── package.json           # 프로젝트 설정 파일
+└── package-lock.json      # NPM 잠금 파일

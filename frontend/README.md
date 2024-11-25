@@ -1,6 +1,31 @@
 # src>components 폴더 생성
 # clone한 경우 npm install 필요
 # npm install react-router-dom
+# npm install react-hook-form react-datepicker
+
+frontend/
+src/
+├── components/
+│   ├── CategoryBox.jsx    # 카테고리박스
+│   ├── DictionaryViewer.jsx    # 사전암기뷰어
+│   ├── Header.jsx         # 헤더 - 최상위
+│   └── TabMenu.jsx        # 로그인이후 메뉴바
+├── context/
+│   └── AuthContext.js     # 인증 상태 관리 컨텍스트
+├── pages/
+│   ├── Challenge.jsx      # 사전암기 화면
+│   ├── Dictionary.jsx     # 사전조회 
+│   ├── HomePage.jsx       # 메인/로그인이후메인/Home 화면
+│   ├── LoginPage.jsx      # 로그인 화면
+│   ├── LogoutPage.jsx     # 로그아웃 기능
+│   ├── SignupPage.jsx     # 회원가입 화면
+│   ├── User.jsx           # 사용자 수정 화면
+│   └── Word.jsx           # 사전입력 화면
+├── utils/
+│   └── axiosInstance.js   # Axios 인스턴스 설정
+├── App.js                 # 앱 루트 컴포넌트
+└── index.js               # ReactDOM 렌더링 진입점
+
 
 
 # Getting Started with Create React App
