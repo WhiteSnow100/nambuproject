@@ -15,7 +15,7 @@ const Header = () => {
   return (
     <header className="header">
       {user ? (
-        <div className="header-left">Welcome, {user.name}</div>
+        <div className="header-left">Welcome, {user.email}</div>
       ) : (
         <div className="header-left">Welcome, Guest</div>
       )}

@@ -1,4 +1,5 @@
 
+# npm start 로 실행
 # npm( Node Package Manager) : node.js에서 사용하는 모듈들을 패키지로 만들어 관리하고 배포하는 역할을 한다.
 # npm init : description, author 등을 입력받아 package.json 작성해준다.
 # Express는 웹 및 모바일 애플리케이션을 위한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크

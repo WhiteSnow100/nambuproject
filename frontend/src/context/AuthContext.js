@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
   const login = async ({ email, pw }) => {
     try {
       const resp = await axiosInstance.post("/auth/login", { email, pw });
-      const { user, accessToken, refreshToken } = resp.data;
-      setUser({ user, accessToken, refreshToken });
+      const { email, accessToken, refreshToken } = resp.data;
+      email({ email, accessToken, refreshToken });
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
     } catch (error) {
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       });
       if (resp.data.valid) {
         setUser({
-          user: resp.data.user,
+          email: resp.data.email,
           accessToken,
           refreshToken,
           // totalword: resp.data.totalword,
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         });
         const { accessToken: newAccessToken } = resp.data;
         setUser({
-          user: resp.data.user,
+          email: resp.data.email,
           accessToken: newAccessToken,
           refreshToken,
           // totalword: resp.data.totalword,
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

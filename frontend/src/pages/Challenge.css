@@ -1,0 +1,63 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .search-container {
+    display: flex;
+    flex-wrap: wrap; /* 반응형으로 감싸기 */
+    gap: 10px; /* 컴포넌트 간격 */
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .number-input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center; 
+  }
+  
+  .number-input-container input {
+    padding: 5px;
+    font-size: 16px;
+    width: 120px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center; /* 텍스트 입력값 가운데 정렬 */
+  }
+  
+  .number-input-container button {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .number-input-container button:hover {
+    background-color: #555;
+  }
+  
+  .page-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .search-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .number-input-container input {
+      width: 100%; /* 작은 화면에서는 가로폭 전체 사용 */
+    }
+  }
+  

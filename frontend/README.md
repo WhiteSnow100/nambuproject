@@ -1,7 +1,7 @@
 # src>components 폴더 생성
 # clone한 경우 npm install 필요
 # npm install react-router-dom
-# npm install react-hook-form react-datepicker
+# npm install react-hook-form react-datepicker // 20241125 추가
 
 frontend/
 src/

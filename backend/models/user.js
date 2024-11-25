@@ -10,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-       name: {
+        name: {
             type: DataTypes.STRING(255),
             allowNull: true,
         }, 
         gen: {
             type: DataTypes.CHAR(1),
             allowNull: true,
-            defaultValue: '1', // 1:여자, 2:남자
+            defaultValue: '2', // 2:여자, 1:남자
         },
         b_date: {
             type: DataTypes.DATE, // DATE 타입
@@ -26,7 +26,12 @@ module.exports = (sequelize, DataTypes) => {
         c_date: {
             type: DataTypes.DATE, // DATE 타입
             allowNull: false,
-            defaultValue: DataTypes.NOW, // 현재 날짜 기본값
+            defaultValue: DataTypes.NOW, // create 기본값
+        },
+        u_date: {
+            type: DataTypes.DATE, // DATE 타입
+            allowNull: false,
+            defaultValue: DataTypes.NOW, // update 기본값
         },
     }, {
         tableName: "users",  // 테이블명 설정

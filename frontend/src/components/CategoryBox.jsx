@@ -1,55 +1,51 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import "../components/CategoryBox.css";
 
-const CategoryBox = ({ fetchData }) => {
-  const [items, setItems] = useState([]);
-  const [selectedValue, setSelectedValue] = useState("");
+const CategoryBox = ({ onSelect  }) => {
+  // const [categories, setCategories] = useState([
+  //   { c_id: "001", c_name: "Option 1" },
+  //   { c_id: "002", c_name: "Option 2" },
+  //   { c_id: "003", c_name: "Option 3" },
+  // ]);
 
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  // DB에서 카테고리 데이터 가져오기
   useEffect(() => {
-    // fetchData는 외부에서 데이터를 가져오는 함수로 전달됩니다.
-    fetchData().then((data) => setItems(data));
-  }, [fetchData]);
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories"); // API 엔드포인트 호출
+        const data = await response.json();
+        setCategories(data); // 데이터 설정
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+    fetchCategories();
+  }, []);
+
+  const handleSelect = (e) => {
+    const selectedId = e.target.value; // 선택한 c_id
+    setSelectedCategory(selectedId);
+    onSelect(selectedId); // 상위 컴포넌트에 전달
   };
 
   return (
-    <div style={styles.container}>
-      <select
-        style={styles.selectBox}
-        value={selectedValue}
-        onChange={handleChange}
-      >
-        <option value="">카테고리를 선택하세요.</option>
-        {items.map((item) => (
-          <option key={item.code} value={item.code}>
-            {item.name}
-          </option>
-        ))}
-      </select>
+    <div>
+      <label>
+        <select value={selectedCategory} onChange={handleSelect}>
+          <option value="">카테고리를 선택하세요</option>
+          {categories.map((category) => (
+            <option key={category.c_id} value={category.c_id}>
+              {category.c_name}
+            </option>
+          ))}
+        </select>
+      </label>
     </div>
   );
 };
 
-CategoryBox.propTypes = {
-  fetchData: PropTypes.func.isRequired, // 데이터를 가져오는 함수
-};
-
 export default CategoryBox;
-
-const styles = {
-  container: {
-    width: "100%", // 부모 요소 크기에 따라 반응형
-    maxWidth: "200px", // 최대 너비
-  },
-  selectBox: {
-    width: "100%", // 너비를 부모에 맞춤
-    height: "50px", // 최대 높이
-    fontSize: "16px",
-    padding: "5px",
-    boxSizing: "border-box", // 패딩 포함 크기 계산
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-  },
-};
