@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import "./category.css";
+import "./Category.css";
 
-const CategoryDropdown = ({ initialCategories, width = "200px", height = "40px" }) => {
+const Category = ({ initialCategories, width = "200px", height = "40px" }) => {
   const [categories, setCategories] = useState(initialCategories);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategories[0]);
+  //const [selectedCategory, setSelectedCategory] = useState(initialCategories[0]);
+  const [selectedCategory, setSelectedCategory] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [showWarning, setShowWarning] = useState(false); // 경고창 상태
-
+console.log("에러")
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const selectCategory = (category) => {
@@ -119,4 +120,4 @@ const CategoryDropdown = ({ initialCategories, width = "200px", height = "40px" 
   );
 };
 
-export default CategoryDropdown;
+export default Category;
