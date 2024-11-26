@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TabMenu from "../components/TabMenu";
 import Category from "../components/Category";
+import CategoryBox from "../components/CategoryBox";
 import ChallengeViewer from "../components/ChallengeViewer";
 import "./Challenge.css"
 
@@ -37,7 +38,7 @@ const Challenge = () => {
     <div className="page-container">
       <TabMenu />
       <div className="search-container">
-        <Category /*onSelect={setCategoryId} */ />
+        <CategoryBox onSelect={setCategoryId} />
         <div className="number-input-container">
           <input 
             type="number"

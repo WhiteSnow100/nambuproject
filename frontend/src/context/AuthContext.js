@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
   const login = async ({ email, pw }) => {
     try {
       const resp = await axiosInstance.post("/auth/login", { email, pw });
-      const { email, accessToken, refreshToken } = resp.data;
-      setUser ({ email, accessToken, refreshToken });
+      const { user, accessToken, refreshToken } = resp.data;
+      setUser({ ...user, accessToken, refreshToken });
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
     } catch (error) {
@@ -40,12 +40,14 @@ export const AuthProvider = ({ children }) => {
       });
       if (resp.data.valid) {
         setUser({
-          email: resp.data.email,
+          ...resp.data.user,
           accessToken,
           refreshToken,
           // totalword: resp.data.totalword,
           // zerocount: resp.data.zerocount,
         });
+      }else{
+        // throw Exception("");
       }
     } catch (error) {
       // 토큰이 유효하지 않으면 리프레시 시도
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
         });
         const { accessToken: newAccessToken } = resp.data;
         setUser({
-          email: resp.data.email,
+          user: resp.data.user,
           accessToken: newAccessToken,
           refreshToken,
           // totalword: resp.data.totalword,
@@ -75,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ setUser, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

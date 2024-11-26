@@ -9,7 +9,7 @@ const createCategory = async (categoryData) => {
     return await models.Category.create(categoryData);
 } // insert category ... values ... 
 
-const updateCategory = async (categoryData) => {
+const updateCategory = async (c_id, categoryData) => {
     return await models.Category.update({
         where : {c_id: c_id}
     }); // update category set .... where c_id = c_id

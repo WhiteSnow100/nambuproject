@@ -22,6 +22,19 @@ dao 폴더 생성 : data access object
 services 폴더 생성 : 복잡한 비지니스로직 담는곳
 routes 폴더 생성
 
+# npm start로 backend/frontend 함께실행하기
+package.json 수정 
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+
+# bsmj 20241126
+npm install cors
+npm install express-validator
+npm install bcryptjs
+npm install jsonwebtoken
+
 create table users (
     id integer primary key autoincrement,
     eamil varchar,

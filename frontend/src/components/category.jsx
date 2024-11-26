@@ -3,8 +3,8 @@ import "./Category.css";
 
 const Category = ({ initialCategories, width = "200px", height = "40px" }) => {
   const [categories, setCategories] = useState(initialCategories);
-  //const [selectedCategory, setSelectedCategory] = useState(initialCategories[0]);
-  const [selectedCategory, setSelectedCategory] = useState();
+  const [selectedCategory, setSelectedCategory] = useState(initialCategories[0]);
+  //const [selectedCategory, setSelectedCategory] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState("");
