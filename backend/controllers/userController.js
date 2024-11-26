@@ -1,12 +1,12 @@
+const { validationResult } = require('express-validator');
 const userService = require('../services/userService');
-const {validationResult} = require('express-validator'); // added
 
-const createUser = async (req, res) => {
+const createUser = async(req, res) => {
     try{
-        const errors = validationResult(req); // added 
-        if(!errors.isEmpty()){ // added
-            return res.status(400).json({errors: errors.array().map(e=>e.msg)});
-        } // added
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array().map(e=>e.msg)});            
+        }
         const user = await userService.createUser(req.body);
         res.status(201).json({data:user, message:'ok'});
     }catch(e){
@@ -14,31 +14,51 @@ const createUser = async (req, res) => {
     }
 }
 
-const findOne = async (req, res) => {
+const findAll = async(req, res) => {
     try{
-        const users = await userService.findOne();
-        // const users = await models.User.findAll();
-        res.status(200).json({data: users, message:'ok'});
+        const users = await userService.findAll();
+        res.status(200).json({data: users, message: 'ok'});
     }catch(e){
-        res.status(500).json({message: e});
+        res.status(500).json({message: e.message});
     }
 }
 
-const updateUser = async (req, res) => {
+const findUserByEmail = async(req, res) => {    
+    const {email} =req.params;  // req.params.email 값을 email 변수에 할당
     try{
-        const errors = validationResult(req); // added 
-        if(!errors.isEmpty()){ // added
-            return res.status(400).json({errors: errors.array().map(e=>e.msg)});
-        } // added
-        const user = await userService.updateUser(req.body);
-        res.status(201).json({data:user, message:'ok'});
+        const user = await userService.findUserByEmail(email);
+        res.status(200).json({data: user, message: 'ok'});
+    }catch(e){
+        res.status(500).json({message: e.message});
+    }
+}
+
+const updateUser = async(req, res) => {
+    const {email} =req.params;
+    const userData = req.body;    
+    try{
+       const user = await userService.updateUser(email, userData);        
+       res.status(200).json({data: user, message: 'ok'});        
+    }catch(e){
+        console.error('Error during update:', e.message);
+        res.status(500).json({message: e.message});
+    }
+}
+
+const deleteUser = async(req, res) => {
+    const {email} =req.params;
+    try{
+        await userService.deleteUser(email);
+        res.status(200).json({message: 'User deleted successfully'})
     }catch(e){
         res.status(500).json({message: e.message});
     }
 }
 
 module.exports = {
-    findOne,
     createUser,
+    findAll,
+    findUserByEmail,
     updateUser,
+    deleteUser,
 }

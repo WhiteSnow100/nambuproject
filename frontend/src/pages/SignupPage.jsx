@@ -1,117 +1,119 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
-import "../pages/SignupPage.css";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  CardActions,
+  CardHeader,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import axiosInstance from "../utils/axiosInstance";
 
-function SignupPage() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const [b_Date, setB_Date] = useState(null);
+const SignupPage = () => {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [pw, setPw] = useState("");
+  const [gen, setGen] = useState(""); 
+  const [b_date, setB_date] = useState("");
+  const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
-    const { email, password, name } = data;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitted:", { email, pw, name, gen, b_date });
+    regist({ email, pw, name, gen, b_date }); //사용자 데이터를 서버로 전송하는 regist 함수 호출
+    navigate("/login");
+  };
 
-    if (!password || password.trim() === "") {
-      alert("Password is required");
-      return;
-    }
-    if (!name || name.trim() === "") {
-      alert("Name is required");
-      return;
-    }
-    if (!b_Date) {
-      alert("Birth date is required");
-      return;
-    }
-
+  const regist = async (data) => {
     try {
-      // 2. 이메일 중복 확인 (백엔드 호출)
-      const emailCheckResponse = await axios.post("http://localhost:5000/api/users/check-email", { email });
-      if (!emailCheckResponse.data.isAvailable) {
-        alert("This email is already registered. Please use a different email.");
-        return;
-      }
-
-      // 3. 사용자 데이터 저장 요청
-      const response = await axios.post("http://localhost:5000/api/users", data);
-      alert("가입이 완료되었습니다.!");
+      const resp = await axiosInstance.post("/auth/register", data);
+      console.log(resp);
     } catch (error) {
-      console.error("Error registering user:", error);
-      alert("가입이 실패하였습니다.");
+      console.error("Error during registration:", error);
     }
   };
 
   return (
-    <div className="container">
-      <form className="form" onSubmit={handleSubmit(onSubmit)}>
-        <h2>사용자 등록</h2>
-
-        {/* Email */}
-        <label>Email:</label>
-        <input
-          type="email"
-          {...register("email", { required: true, maxLength: 255 })}
-          placeholder="email을 입력하세요."
+    <Card
+      sx={{
+        maxWidth: 400,
+        mx: "auto",
+        mt: 5,
+        boxShadow: 3,
+        padding: 3,
+      }}
+    >
+      <Box component="form" onSubmit={handleSubmit}>
+        <CardHeader
+          title={
+            <Typography variant="h4" align="center" gutterBottom>
+              회원가입
+            </Typography>
+          }
         />
-        {errors.email && <p className="error">Valid email is required</p>}
-
-        {/* Password */}
-        <label>비밀번호:</label>
-        <input
-          type="password"
-          {...register("password", { required: true, maxLength: 255 })}
-          placeholder="비밀번호를 입력하세요."
-        />
-        {errors.pw && <p className="error">Password is required</p>}
-
-        {/* Name */}
-        <label>이름:</label>
-        <input
-          type="text"
-          {...register("name", { required: true, maxLength: 255 })}
-          placeholder="이름을 입력하세요."
-        />
-        {errors.name && <p className="error">Name is required</p>}
-
-        {/* Gender */}
-        <label>성별:</label>
-        <div>
-          <label>
-            <input
-              type="radio"
-              value="1"
-              {...register("gender", { required: true })}
-            /> 남성
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="2"
-              defaultChecked
-              {...register("gender", { required: true })}
-            /> 여성
-          </label>
-        </div>
-        {errors.gender && <p className="error">Gender is required</p>}
-
-        {/* Birth Date */}
-        <label>생년월일:</label>
-        <div className="date-picker">
-          <DatePicker
-            selected={b_Date}
-            onChange={(date) => setB_Date(date)}
-            dateFormat="yyyy-MM-dd"
-            placeholderText="생년월일 선택"
+        <CardContent>
+          <TextField
+            label="사용자명"
+            fullWidth
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{ mb: 2 }}
+            required
           />
-        </div>
-        {b_Date === null && <p className="error">Birth date is required</p>}
-
-        {/* Submit Button */}
-        <button type="submit">가입하기</button>
-      </form>
-    </div>
+          <TextField
+            label="이메일"
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ mb: 2 }}
+            required
+          />
+          <TextField
+            label="비밀번호"
+            type="password"
+            fullWidth
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+            sx={{ mb: 2 }}
+            required
+          />          
+          <FormControl fullWidth sx={{ mb: 2 }} required>
+            <InputLabel id="gender-label">성별</InputLabel>
+            <Select
+              labelId="gender-label"
+              value={gen}
+              onChange={(e) => setGen(e.target.value)}
+            >              
+              <MenuItem value="1">여성</MenuItem>
+              <MenuItem value="2">남성</MenuItem>
+            </Select>
+          </FormControl> 
+          <TextField
+            label="생년월일"
+            type="date"
+            fullWidth
+            value={b_date}
+            onChange={(e) => setB_date(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            sx={{ mb: 2 }}
+            required
+          />                  
+        </CardContent>
+        <CardActions sx={{ justifyContent: "center" }}>
+          <Button type="submit" variant="contained" color="primary">
+            회원가입
+          </Button>
+        </CardActions>
+      </Box>
+    </Card>
   );
-}
+};
 
 export default SignupPage;

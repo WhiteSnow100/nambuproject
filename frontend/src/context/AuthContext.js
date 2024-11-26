@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const resp = await axiosInstance.post("/auth/login", { email, pw });
       const { email, accessToken, refreshToken } = resp.data;
-      email({ email, accessToken, refreshToken });
+      setUser ({ email, accessToken, refreshToken });
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
     } catch (error) {
