@@ -1,14 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
     const Dictionary = sequelize.define('Dictionary', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true, // 자동 증가
+            primaryKey: true, // 기본 키
+        },
         email: {
             type: DataTypes.STRING(255), // 255
-            allowNull: false, 
-            primaryKey : true,
+            allowNull: false,  
+            validate: {
+                isEmail: true, // Sequelize validation
+            },
         },
         word: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-            primaryKey : true,
+            allowNull: false, 
         },
         des: {
             type: DataTypes.STRING(8000), // TEXT 타입, 긴 데이터 지원
@@ -50,11 +56,21 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW,
-        },    
+        },  
+        u_date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+        },  
     }, {
         tableName: "dictionarys",
-        timestamps: false, // createdAt, updatedAt 자동 생성 비활성화
-        id: false, // 기본적으로 생성되는 `id` 필드를 방지
+        timestamps: false, // createdAt, updatedAt 자동 생성 비활성화 
+        indexes: [
+            {
+                unique: true, // 유니크 인덱스 설정
+                fields: ['email', 'word'], // email과 word의 조합을 유니크로 설정
+            },
+        ],
     });
     return Dictionary;
 }

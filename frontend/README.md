@@ -3,6 +3,8 @@
 # npm install react-router-dom
 # npm install react-hook-form react-datepicker // 20241125 추가
 # npm install @mui/material @emotion/react @emotion/styled // 20241126 유미경님 추가
+# npm install @mui/icons-material // 20241127 전혜옥님 추가
+# npm install webm-to-wav-converter // 20241127 전혜옥님 추가
 
 frontend/
 src/

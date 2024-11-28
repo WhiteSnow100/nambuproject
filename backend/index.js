@@ -2,13 +2,14 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const cors = require("cors");
-const bodyParser = require('body-parser');
-const { Dictionary } = require('./models/dictionary');
+const bodyParser = require('body-parser'); 
 
 // import router from routes 
-const userRoute = require('./routes/userRoute'); 
-const authRoute = require('./routes/authRoute');
+const userRoute = require('./routes/userRoutes'); 
+const authRoute = require('./routes/authRoutes');
 const categoryRoute = require('./routes/categoryRoute');
+const dictionaryRoute = require('./routes/dictionaryRoute');
+const levelRoute = require('./routes/levelRoute');
 
 const models = require('./models/index'); // models/index.js
 // models <= db
@@ -33,30 +34,9 @@ app.use('/auth',  authRoute);
 // category
 app.use('/categorys', categoryRoute);
 
-// API 엔드포인트: 단어 업데이트
-app.put('/api/dictionary/:word', async (req, res) => {
-  const { word } = req.params;
-  const { level, email } = req.body;  // 이메일과 레벨을 요청에서 받음
-
-  try {
-    // email과 word를 기준으로 검색
-    const dictionary = await Dictionary.findOne({
-      where: { word, email }
-    });
-
-    if (!dictionary) {
-      return res.status(404).json({ message: '해당 단어를 찾을 수 없습니다.' });
-    }
-
-    dictionary.level = level;  // 레벨 업데이트
-    await dictionary.save();
-
-    res.status(200).json({ message: '레벨이 성공적으로 업데이트되었습니다.' });
-  } catch (error) {
-    console.error('Error updating dictionary:', error);
-    res.status(500).json({ message: '서버 오류가 발생했습니다.' });
-  }
-});
+app.use('/dictionarys', dictionaryRoute);
+// dictionary.level
+app.use('/level', levelRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

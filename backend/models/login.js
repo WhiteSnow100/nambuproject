@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING, // 255
             allowNull: false, 
+            validate: {
+                isEmail: true, // Sequelize validation
+            },
         },  
         login_date: {
             type: DataTypes.DATE,
@@ -21,8 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         },    
     }, {
         tableName: "logins",
-        timestamps: false,
-        id: false,
+        timestamps: false, 
     });
     return Login;
 }

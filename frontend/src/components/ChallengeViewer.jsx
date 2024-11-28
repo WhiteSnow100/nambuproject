@@ -36,7 +36,7 @@ const ChallengeViewer = ({ dictionarys }) => {
 
     try {
         // 서버로 레벨 업데이트 요청
-      await fetch(`/api/dictionary/${dictionary.word}`, {
+      await fetch(`/api/level/${dictionary.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

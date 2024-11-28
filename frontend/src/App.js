@@ -8,7 +8,8 @@ import LogoutPage from "./pages/LogoutPage";
 
 import User from "./pages/User";
 
-import Word from "./pages/Word";
+import WordPage from "./pages/WordPage";
+import Word from "./components/Word";
 import Challenge from "./pages/Challenge";
 import Dictionary from "./pages/Dictionary";
 
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/challenge" element={<Challenge />} />
           <Route path="/dictionary" element={<Dictionary />} />
           <Route path="/word" element={<Word />} />
+          <Route path="/wordPage" element={<WordPage />} />
           <Route path="/user" element={<User />} />
         </Routes>
       </Router>

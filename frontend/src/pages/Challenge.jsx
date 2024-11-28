@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import TabMenu from "../components/TabMenu";
-import Category from "../components/Category";
+import TabMenu from "../components/TabMenu"; 
 import CategoryBox from "../components/CategoryBox";
 import ChallengeViewer from "../components/ChallengeViewer";
 import "./Challenge.css"
@@ -11,21 +10,21 @@ const Challenge = () => {
   const [dictionarys, setDictionarys] = useState([]);
 
   const handleFetchData = async () => {
-    if (!categoryId || numDictionarys <= 0) {
-      alert("카테고리를 선택하고 올바른 숫자를 입력하세요.");
-      return;
-    }
+    // if (!categoryId || numDictionarys <= 0) {
+    //   alert("카테고리를 선택하고 올바른 숫자를 입력하세요.");
+    //   return;
+    // }
 
     try {
-      const response = await fetch(`/api/dictionary?category=${categoryId}&limit=${numDictionarys}`);
-      const data = await JSON.parse(response.json());
-      // const response = `[
-      //   { "word": "001", "des": "카테고리 1", "des_json":"", "level":10},
-      //   { "word": "002", "des": "카테고리 2", "des_json":"", "level":10 },
-      //   { "word": "003", "des": "카테고리 3", "des_json":"", "level":10 }
-      // ]`;
+      //const response = await fetch(`/api/level?c_id=${c_id}&limit=${numDictionarys}`);
+      // const data = await JSON.parse(response.json());
+      const response = `[
+        { "id":7, "word": "고양이", "des": "반려동물1", "des_json":"", "level":10},
+        { "id":8, "word": "개", "des": "시베리안 허스키", "des_json":"", "level":10},
+        { "id":9, "word": "달팽이", "des": "느림보 친구", "des_json":"", "level":10}
+      ]`;
   
-      //const data = JSON.parse(response); 
+      const data = JSON.parse(response); 
       const shuffledDictionarys = data.sort(() => Math.random() - 0.5); // 데이터 랜덤 섞기
     
       setDictionarys(shuffledDictionarys);

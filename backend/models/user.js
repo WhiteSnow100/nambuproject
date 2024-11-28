@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true,
             primaryKey : true,
+            validate: {
+                isEmail: true, // Sequelize validation
+            },
         },
         pw: {
             type: DataTypes.STRING(255),

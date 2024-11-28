@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import "../components/CategoryBox.css";
 
 const CategoryBox = ({ onSelect  }) => {
-  // const [categories, setCategories] = useState([
-  //   { c_id: "001", c_name: "Option 1" },
-  //   { c_id: "002", c_name: "Option 2" },
-  //   { c_id: "003", c_name: "Option 3" },
-  // ]);
+  const [c_id, setC_id] = useState([
+    { c_id: "001", c_name: "Option 1" },
+    { c_id: "002", c_name: "Option 2" },
+    { c_id: "003", c_name: "Option 3" },
+  ]);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");

@@ -3,6 +3,9 @@ module.exports = (sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING(255), // 255
             allowNull: false, 
+            validate: {
+                isEmail: true, // Sequelize validation
+            },
         },
         c_id: {
             type: DataTypes.INTEGER,
@@ -19,14 +22,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: DataTypes.NOW,
         }, 
-        d_date: {
+        u_date: {
             type: DataTypes.DATE,
             allowNull: true,
+            defaultValue: DataTypes.NOW,
         }, 
     }, {
         tableName: "categorys",
         timestamps: false,
-        id: false, // 기본적으로 생성되는 `id` 필드를 방지
+        id: false, // 기본적으로 생성되는 `id` 필드를 방지\
+        indexes: [
+            {
+                fields: ['email'], // Add an index on the `email` column
+            },
+        ],
     });
     return Category;
 }
