@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from '../context/AuthContext';  // AuthContext import
+import axiosInstance from "../utils/axiosInstance";
 import "../components/ChallengeViewer.css";
+
 
 const ChallengeViewer = ({ dictionarys }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,15 +38,20 @@ const ChallengeViewer = ({ dictionarys }) => {
 
     try {
         // 서버로 레벨 업데이트 요청
-      await fetch(`/api/level/${dictionary.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          level,
-          email: user.email,  // email은 AuthContext에서 가져온 사용자 이메일
-        }),
-      });
-      
+      // await fetch(`http://localhost:3001/api/level/${dictionary.id}`, {
+      //   method: "PUT",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     level,
+      //     email: user.email  
+      //   }),
+      // });
+
+        await axiosInstance.put(`/api/level/${dictionary.id}`, {
+            level: level, // level 값
+            email: user.email, // email 값
+        });
+
       setCurrentIndex((prev) => prev + 1); // 다음 카드로 이동
       setIsFlipped(false);  // 카드초기화
       
@@ -71,15 +78,15 @@ const ChallengeViewer = ({ dictionarys }) => {
             <div className="level-selector">
               <label>
                 <input type="radio" name="level" value="10" checked={dictionary.level === 10}
-                  onChange={() => handleSelectLevel(10)}
+                  onClick={() => handleSelectLevel(10)}
                 />상</label>
               <label>
                 <input type="radio" name="level" value="5" checked={dictionary.level === 5}
-                  onChange={() => handleSelectLevel(5)}
+                  onClick={() => handleSelectLevel(5)}
                 />중</label>
               <label>
                 <input type="radio" name="level" value="0" checked={dictionary.level === 0}
-                  onChange={() => handleSelectLevel(0)}
+                  onClick={() => handleSelectLevel(0)}
                 />하</label>
             </div>
           </div>

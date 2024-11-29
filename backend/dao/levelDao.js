@@ -1,30 +1,38 @@
 const models = require('../models');
 
-const findLevelByEmail = async (email) => {
-    const query = `
-        SELECT * 
-        FROM Dictionary 
-        WHERE email = :email
+const findLevelByCategory = async (c_id, limit) => {
+    // console.log(`levelDao.js 4line id:${c_id}, limit:${limit}`);
+    const query = `  
+        SELECT id, email, word, des, des_json, level
+        FROM dictionarys
+        WHERE c_id = :c_id
+        and level <> 0 
+        LIMIT :limit;
     `;
-
+    // console.log(`levelDao.js 12line query:${query}`);
     return await models.sequelize.query(query, {
         type: models.Sequelize.QueryTypes.SELECT,
-        replacements: { email }, // email 변수를 바인딩
+        replacements: { c_id, limit },
     });
 };
 
-const updateLevel = async (id, level) => {
-    console.log(id);
-    return await models.Dictionary.update(
-        { level }, // 업데이트할 컬럼과 값
-        {
-            where: { id }, // 조건: id가 일치하는 행
-        }
-    );
+const updateLevelById = async (id, level) => {
+    try {
+        // console.log(`levelDao.js 21line id:${id}, level:${level}`);
+    
+        const result = await models.Dictionary.update(
+        { level }, // Update level column
+        { where: { id: Number(id) } } // Match id
+        );
+        return result; // Returns the number of updated rows
+    } catch (e) {
+       //  throw error; // Handle errors in service/controller layer
+        console.error('Error during update levelDao.js:', e.message);
+        res.status(500).json({message: e.message});
+    }
 };
- 
 
 module.exports = {
-    updateLevel,
-    findLevelByEmail, 
+    updateLevelById,
+    findLevelByCategory, 
 } 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TabMenu from "../components/TabMenu"; 
 import CategoryBox from "../components/CategoryBox";
 import ChallengeViewer from "../components/ChallengeViewer";
+import axiosInstance from "../utils/axiosInstance";
 import "./Challenge.css"
 
 const Challenge = () => {
@@ -14,10 +15,12 @@ const Challenge = () => {
     //   alert("카테고리를 선택하고 올바른 숫자를 입력하세요.");
     //   return;
     // }
-
+    const c_id = 7;
+    
     try {
-      //const response = await fetch(`/api/level?c_id=${c_id}&limit=${numDictionarys}`);
-      // const data = await JSON.parse(response.json());
+      // const response = await axiosInstance.get(`/api/level?c_id=7&limit=10`);
+      // //const response = await fetch(`/api/level?c_id=${c_id}&limit=${numDictionarys}`);
+      // // const data = await JSON.parse(response.json());
       const response = `[
         { "id":7, "word": "고양이", "des": "반려동물1", "des_json":"", "level":10},
         { "id":8, "word": "개", "des": "시베리안 허스키", "des_json":"", "level":10},

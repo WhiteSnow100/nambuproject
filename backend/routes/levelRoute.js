@@ -2,9 +2,8 @@ const express = require('express');
 const levelController = require('../controllers/levelController');
 const router = express.Router();
 
-
-router.put('/:id', levelController.updateLevel); 
-router.get('/:email', levelController.findLevelByEmail);
+router.get('/', levelController.findLevelByCategory);
+router.put('/:id', levelController.updateLevelByID);
 
 module.exports = router;
  

@@ -36,7 +36,7 @@ app.use('/categorys', categoryRoute);
 
 app.use('/dictionarys', dictionaryRoute);
 // dictionary.level
-app.use('/level', levelRoute);
+app.use('/api/level', levelRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

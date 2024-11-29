@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         u_date: {
             type: DataTypes.DATE, // DATE 타입
-            allowNull: false,
+            allowNull: true,
             defaultValue: DataTypes.NOW, // update 기본값
         },
     }, {
