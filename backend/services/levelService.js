@@ -9,6 +9,13 @@ const findLevelByCategory = async(c_id, limit) => {
     return await levelDao.findLevelByCategory(c_id, parsedLimit);
 }
 
+const findLevelByEmail = async(email) => {
+    if (!email) {
+        throw new Error('email are required');
+    } 
+    return await levelDao.findLevelByEmail(email);
+}
+
 const updateLevelById = async(id, level) => {
     // console.log(`levelservice.js 8line id:${id}, level:${level}`)
     // if (!id || level === undefined || level === null) {
@@ -20,5 +27,6 @@ const updateLevelById = async(id, level) => {
 
 module.exports = {
     findLevelByCategory,
+    findLevelByEmail,
     updateLevelById,
 }

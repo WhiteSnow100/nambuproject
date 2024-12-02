@@ -16,6 +16,20 @@ const findLevelByCategory = async (c_id, limit) => {
     });
 };
 
+const findLevelByEmail = async (email) => {
+    // console.log(`levelDao.js 4line id:${c_id}, limit:${limit}`);
+    const query = `  
+        SELECT count(*) total_cnt, sum(case level when 0 then 1 else 0 end) complete_cnt
+        FROM dictionarys a 
+        WHERE email = :email;
+    `;
+    // console.log(`levelDao.js 12line query:${query}`);
+    return await models.sequelize.query(query, {
+        type: models.Sequelize.QueryTypes.SELECT,
+        replacements: { email },
+    });
+};
+
 const updateLevelById = async (id, level) => {
     try {
         // console.log(`levelDao.js 21line id:${id}, level:${level}`);
@@ -35,4 +49,5 @@ const updateLevelById = async (id, level) => {
 module.exports = {
     updateLevelById,
     findLevelByCategory, 
+    findLevelByEmail,
 } 

@@ -18,16 +18,14 @@ const Challenge = () => {
     const c_id = 7;
     
     try {
-      // const response = await axiosInstance.get(`/api/level?c_id=7&limit=10`);
-      // //const response = await fetch(`/api/level?c_id=${c_id}&limit=${numDictionarys}`);
-      // // const data = await JSON.parse(response.json());
-      const response = `[
-        { "id":7, "word": "고양이", "des": "반려동물1", "des_json":"", "level":10},
-        { "id":8, "word": "개", "des": "시베리안 허스키", "des_json":"", "level":10},
-        { "id":9, "word": "달팽이", "des": "느림보 친구", "des_json":"", "level":10}
-      ]`;
-  
-      const data = JSON.parse(response); 
+      const response = await axiosInstance.get(`/api/level/category?c_id=7&limit=10`);
+      if (response.status !== 200) {
+        throw new Error('Failed to fetch data');
+      }  
+      const data = response.data.dictionarys;  // Axios는 `data`에 응답 본문이 포함됨
+
+      // console.log(`challenge.jsx 27line ${data}`)
+       
       const shuffledDictionarys = data.sort(() => Math.random() - 0.5); // 데이터 랜덤 섞기
     
       setDictionarys(shuffledDictionarys);

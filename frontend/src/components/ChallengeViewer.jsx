@@ -47,7 +47,7 @@ const ChallengeViewer = ({ dictionarys }) => {
       //   }),
       // });
 
-        await axiosInstance.put(`/api/level/${dictionary.id}`, {
+        await axiosInstance.put(`/api/level/id/${dictionary.id}`, {
             level: level, // level 값
             email: user.email, // email 값
         });
