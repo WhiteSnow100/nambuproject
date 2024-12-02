@@ -37,16 +37,6 @@ const ChallengeViewer = ({ dictionarys }) => {
     }
 
     try {
-        // 서버로 레벨 업데이트 요청
-      // await fetch(`http://localhost:3001/api/level/${dictionary.id}`, {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     level,
-      //     email: user.email  
-      //   }),
-      // });
-
         await axiosInstance.put(`/api/level/id/${dictionary.id}`, {
             level: level, // level 값
             email: user.email, // email 값

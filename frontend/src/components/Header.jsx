@@ -15,8 +15,9 @@ const Header = () => {
       if (user && user.email) {
         try {
           const response = await axiosInstance.get(`/api/level/email/${user.email}`); 
-          setUserData(response.data); // 가져온 데이터 상태에 저장
-          console.log(`header.jsx ${response.data.total_cnt} ${response.data.complete_cnt}`)
+          const data = response.data[0];
+          // console.log(`header.jsx 19line ${data.total_cnt} `)
+          setUserData(data); // 가져온 데이터 상태에 저장 
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -30,11 +31,81 @@ const Header = () => {
     navigate("/");
   };
 
+  // 별 생성 로직
+  const renderStars = (total, complete) => {
+    const stars = [];
+    const fullStars = Math.floor(complete / 10); // 완전히 채워진 별의 개수
+    const hasHalfStar = complete % 10 > 0; // 반쪽 별 여부
+    const totalStars = Math.ceil(total / 10); // 총 별의 개수
+
+    // for (let i = 0; i < totalStars; i++) {
+    //   if (i < fullStars) {
+    //     stars.push(
+    //       <img
+    //         key={i}
+    //         src="/full-star.png"
+    //         alt="Filled Star"
+    //         className="star-icon"
+    //       />
+    //     );
+    //   } else if (i === fullStars && hasHalfStar) {
+    //     stars.push(
+    //       <img
+    //         key={i}
+    //         src="/half-star.png"
+    //         alt="Half Star"
+    //         className="star-icon"
+    //       />
+    //     );
+    //   } else {
+    //     stars.push(
+    //       <img
+    //         key={i}
+    //         src="/empty-star.png"
+    //         alt="Empty Star"
+    //         className="star-icon"
+    //       />
+    //     );
+    //   }
+    // }
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < fullStars) {
+        stars.push(
+          <span key={i} className="star-icon">
+            ★ {/* 채워진 별 */}
+          </span>
+        );
+      } else if (i === fullStars && hasHalfStar) {
+        stars.push(
+          <span key={i} className="star-icon">
+            ✬ {/* 반쪽 별 */}
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-icon">
+            ☆ {/* 빈 별 */}
+          </span>
+        );
+      }
+    }
+    return stars;
+  }
+
   return (
     <header className="header">
       {user ? (
-        <div className="header-left"><p>Welcome, {user.email}</p>
-        [ {userData && <p>Related Info: {userData.someField} ] </p>} {/* 유저 데이터 표시 */}
+        <div className="header-left"><p>{user.email}
+        {userData && (
+                <>
+                <span> [{userData.complete_cnt}/{userData.total_cnt}]</span>
+                <div className="stars-container">
+                  {renderStars(userData.total_cnt, userData.complete_cnt)}
+                </div>
+              </>
+            )}
+          </p>
         </div>
       ) : (
         <div className="header-left">Welcome, Guest</div>

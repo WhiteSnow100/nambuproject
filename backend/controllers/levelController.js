@@ -4,7 +4,7 @@ const levelService = require('../services/levelService');
 const findLevelByCategory = async(req, res) => {    
     const { c_id, limit } = req.query; 
     if (!c_id) {
-        return res.status(400).json({ message: 'Category는 항상 선택되어야 합니다.' });
+        return res.status(400).json({ message: 'Category는 항상 선택되어야 합니다. levelController.js 7line' });
     }
 
     // 필요에 따라 c_id와 limit를 정수로 변환
@@ -16,27 +16,27 @@ const findLevelByCategory = async(req, res) => {
         const dictionarys = await levelService.findLevelByCategory(c_id, limit);
         
         if (!dictionarys) {
-            return res.status(404).json({ message: 'Level not found' });
+            return res.status(404).json({ message: 'Level not found levelController.js 19line' });
         }
         res.status(200).json({dictionarys});
     }catch(e){
-        console.error('Error fetching 20line levelController.js:', e.message);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching 23line levelController.js:', e.message);
+        res.status(500).json({ message: 'Server error levelController.js 24line' });
     }
 }
 
 const findLevelByEmail = async(req, res) => {    
-    const email = req.params; 
-    
+    // const email = req.params.email; 
+    const user = req.user;
     try{
-        const dictionary = await levelService.findLevelByEmail(email);
-        
+        const dictionary = await levelService.findLevelByEmail(user.email);
+        // console.log(`levelcontroller.js 31line ${dictionary}`)
         if (!dictionary) {
-            return res.status(404).json({ message: 'Level not found' });
+            return res.status(404).json({ message: 'Level not found levelController.js 34line' });
         }
-        res.status(200).json(dictionary);
+        res.status(200).json({dictionary});
     }catch(e){
-        console.error('Error fetching 20line levelController.js:', e.message);
+        console.error('Error fetching 38line levelController.js:', e.message);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -52,12 +52,12 @@ const updateLevelByID = async(req, res) => {
         // } 
         
         if (![10, 5, 0].includes(level)) {
-            return res.status(400).json({ message: 'Level is required levelController.js' });
+            return res.status(400).json({ message: 'Level is required levelController.js 55line' });
         }
         const result = await levelService.updateLevelById(id, level);     
         res.status(200).json({data: result, message: 'ok'});        
     }catch(e){
-       console.error('Error during update levelController.js:', e.message);
+       console.error('Error during update levelController.js 60line : ', e.message);
        res.status(500).json({message: e.message});
     }
 }
