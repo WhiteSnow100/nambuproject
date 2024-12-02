@@ -4,11 +4,12 @@
   align-items: center; /* 세로로 중앙 정렬 */
   justify-content: flex-start; /* 왼쪽 정렬 */
   width: 100%; /* 부모의 전체 너비 사용 */
+  position: relative;
 }
 
 /* 선택 박스 */
 .category-box {
-width: 80%;
+width: 90%;
 height: 50px; /* 높이 추가 */
 border: 1px solid #ccc;
 border-radius: 5px;
@@ -23,15 +24,16 @@ font-size: 18px; /* 텍스트 크기 키움 */
 
 /* 드롭다운 목록 */
 .category-dropdown {
-  position: absolute;
+  position: absolute; /* 부모 요소인 .category-container를 기준으로 위치 */
   left: 0;
-  width: 200px;
+  width: 85%;
+  height: 40px; 
   border: 1px solid #ccc;
   border-radius: 4px;
   background: #fff;
   list-style: none;
-  margin-top: 25px;
-  margin-left:10px;
+  margin-top: 20px; 
+  margin-left: 1px;
   padding: 5px 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -48,29 +50,28 @@ font-size: 18px; /* 텍스트 크기 키움 */
 }
 
 /* 버튼 그룹 */
-.button-group {
+.buttons {
   display: flex;
   flex-direction: column; /* 버튼들을 수직으로 배치 */
-  
   margin-left: 10px; /* 카테고리 박스와 버튼 간의 간격 */
 }
 
 /* 추가 버튼 */
-.add-button {
+.add-btn {
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 4px; 
   background: #4caf78;
   color: #fff;
   border: none;
   cursor: pointer;
 }
 
-.add-button:hover {
+.add-btn:hover {
   background: #45a049;
 }
 
 /* 삭제 버튼 */
-.remove-button {
+.remove-btn {
   padding: 5px 10px;
   border-radius: 4px;
   background: #f44336;
@@ -79,7 +80,7 @@ font-size: 18px; /* 텍스트 크기 키움 */
   cursor: pointer;
 }
 
-.remove-button:hover {
+.remove-btn:hover {
   background: #e53935;
 }
 
@@ -90,7 +91,7 @@ font-size: 18px; /* 텍스트 크기 키움 */
   border: none;
   outline: none;
   font-size: 1em;
-  padding: 0 8px;
+  padding: 0 2px;
   box-sizing: border-box;
 }
 
