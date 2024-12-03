@@ -62,6 +62,35 @@ export default Challenge;
 
 
 
+// /* Challenge.css */
+// .number-input-container {
+//   display: flex;
+//   align-items: center;
+//   gap: 10px; /* 입력 필드와 버튼 간격 */
+// }
+
+// .number-input-container input {
+//   width: 100px; /* 입력 필드 너비 */
+//   padding: 5px; /* 입력 필드 안쪽 여백 */
+//   font-size: 16px; /* 입력 필드 텍스트 크기 */
+//   border: 1px solid #ccc; /* 입력 필드 테두리 색 */
+//   border-radius: 4px; /* 테두리에 둥근 모서리 */
+// }
+
+// .number-input-container button {
+//   padding: 5px 10px; /* 버튼 안쪽 여백 */
+//   font-size: 16px; /* 버튼 텍스트 크기 */
+//   color: #fff; /* 버튼 텍스트 색 */
+//   background-color: #007bff; /* 버튼 배경색 */
+//   border: none; /* 테두리 제거 */
+//   border-radius: 4px; /* 둥근 모서리 */
+//   cursor: pointer; /* 커서 모양 변경 */
+//   transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+// }
+
+// .number-input-container button:hover {
+//   background-color: #0056b3; /* 버튼 호버 시 색상 */
+// }
 
 
 
