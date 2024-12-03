@@ -42,7 +42,7 @@ const UserEdit = () => {
     console.log("Updated Data:", {name, gen, b_date});
     updateUser(email, {name, gen, b_date});
     alert("성공적으로 수정되었습니다.")
-    navigate("/user-profile");
+    navigate("/user");
   }  
 
   return (

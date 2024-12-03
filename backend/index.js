@@ -5,7 +5,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser'); 
 
 // import router from routes 
-const userRoute = require('./routes/userRoutes'); 
+const userRoute = require('./routes/userRoute'); 
 const authRoute = require('./routes/authRoutes');
 const categoryRoute = require('./routes/categoryRoute');
 const dictionaryRoute = require('./routes/dictionaryRoute');
@@ -32,7 +32,7 @@ app.use('/users', userRoute);
 // app.use('/posts', postRoute);
 app.use('/auth',  authRoute);
 // category
-app.use('/categorys', categoryRoute);
+app.use('/category', categoryRoute);
 
 app.use('/dictionarys', dictionaryRoute);
 // dictionary.level

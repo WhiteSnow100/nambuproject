@@ -7,7 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import LogoutPage from "./pages/LogoutPage";
 
-import User from "./pages/UserPage";
+import User from "./pages/UserPage"; 
 
 import WordPage from "./pages/WordPage";
 import Word from "./components/Word";
@@ -47,7 +47,7 @@ const App = () => {
           <Route path="/word" element={<Word />} />
           <Route path="/wordPage" element={<WordPage />} />
           <Route path="/user" element={<User />} />
-          <Route path="/edit-profile" element={<UserEditPage />} />
+          <Route path="/edit-profile" element={<UserEditPage />} /> 
         </Routes>
       </Router>
       </ThemeProvider>

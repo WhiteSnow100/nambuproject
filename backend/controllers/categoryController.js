@@ -16,10 +16,12 @@ const createCategory = async (req, res) => {
 }
 
 const findCategoryByEmail = async (req, res) => {
-    const {email} = req.params;
+    const email = req.params.email;
     //const user = req.user;
+    // console.log(`categorycontroller.js 21line ${email}`)
     try{
         const categories = await categoryService.findCategoryByEmail(email); 
+        // console.log(`categorycontroller.js 24line ${categories}`)
         // res.status(200).json({data: categories, message:'ok'});
         res.status(200).json({categories});
     }catch(e){

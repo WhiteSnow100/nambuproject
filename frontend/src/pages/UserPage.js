@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthContext.js";
 const UserPage = () => {
     const { user } = useAuth();
     const Navigate = useNavigate();
-    console.log(user); // user 객체가 정상적으로 전달되었는지 확인
+    // console.log(user); // user 객체가 정상적으로 전달되었는지 확인
 
     const handleEditClick = () => {
         Navigate("/edit-profile");

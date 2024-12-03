@@ -11,6 +11,7 @@ const Challenge = () => {
   const [dictionarys, setDictionarys] = useState([]);
 
   const handleFetchData = async () => {
+    // console.log(`challenge.jsx 14line c_id:${c_id}, limit:${limit}`)
     if (!c_id || limit <= 0) {
       alert("카테고리를 선택하고 올바른 숫자를 입력하세요.");
       return;
@@ -23,7 +24,7 @@ const Challenge = () => {
       }  
       const data = response.data.data;  // Axios는 `data`에 응답 본문이 포함됨
 
-      console.log(`challenge.jsx 27line ${data}`)
+      // console.log(`challenge.jsx 27line ${data}`)
        
       const shuffledDictionarys = data.sort(() => Math.random() - 0.5); // 데이터 랜덤 섞기
     

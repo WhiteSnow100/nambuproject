@@ -18,6 +18,12 @@ const Category = ({
   const [showWarning, setShowWarning] = useState(false); // 경고창 상태
   const { user } = useAuth();
  
+  useEffect(() => {
+    if (categories.length > 0 && selectedCategory == null) {
+      setSelectedCategory(categories[0].c_id);
+    }
+  }, [categories, selectedCategory]);
+  
   useEffect(()=>{    
     const fetchCategories = async() => {  
       if (!user || !user.email) {
@@ -28,7 +34,7 @@ const Category = ({
       try{
         const response = await axiosInstance.get(`/category/email/${email}`); //백엔드에서 데이터 가져오기
         const categories = response.data.categories;
-        console.log("category 27번째줄:", response.data.categories);
+        // console.log("category 27번째줄:", response.data.categories);
 
         if (!Array.isArray(categories) || categories.length === 0) {
           console.warn("No categories found.");
@@ -37,18 +43,18 @@ const Category = ({
       }
       
       if(Array.isArray(categories)){
-        console.log("category.jsx 35번째줄response.data.categories"+response.data.categories);
-        console.log("category.jsx 36번째줄JSON.strigify", JSON.stringify(response.data.categories, null, 2));
+        // console.log("category.jsx 35번째줄response.data.categories"+response.data.categories);
+        // console.log("category.jsx 36번째줄JSON.strigify", JSON.stringify(response.data.categories, null, 2));
 
         setCategories(categories); //데이터 상태 업데이트
         if(categories.length > 0){
           const firstCategory = categories[0]; //첫번째 카테고리 선택
           setSelectedCategory(firstCategory.c_id); //ID 저장
           
-          console.log("category 47번째", firstCategory.c_id);
+          // console.log("category 47번째", firstCategory.c_id);
 
           onSelect(firstCategory.c_id); //부모 컴포넌트에 전달
-          console.log("Selected category ID in Category:", firstCategory.c_id);
+          // console.log("Selected category ID in Category:", firstCategory.c_id);
 
         }
       }else{
@@ -69,7 +75,7 @@ const Category = ({
   const selectCategory = (category) => {
     setSelectedCategory(category.c_id); //ID 저장
     
-    console.log("category.jsx 66번째줄"+category.c_id);
+    // console.log("category.jsx 66번째줄"+category.c_id);
 
     onSelect(category.c_id);
     setIsOpen(false);
@@ -93,7 +99,6 @@ const Category = ({
     // categories가 배열인지 확인하고, 배열 내부의 각 객체에 'c_name' 속성이 있는지 확인
     if (Array.isArray(categories)) {
       const isExistingCategory = categories.some(category => category.c_name === trimmedValue);
-
       if (isExistingCategory) {
         alert("이미 존재하는 목록입니다.");
         setIsEditing(false);
@@ -105,17 +110,24 @@ const Category = ({
       const response = await axiosInstance.post('/category/create', {
         c_name: trimmedValue, // 새 카테고리 이름 전달
         email
-      });
-
-      console.log("category.jsx 102번째줄response.data.categories", response.data.categories);
-      console.log("category.jsx 103번째줄JSON.strigify", JSON.stringify(response.data.categories, null, 2));
-      console.log("Full Response:", response.data);
+      });      
 
       //백엔드에서 반환된 새로운 카테고리를 상태에 추가
       const newCategory = response.data; // 백엔드에서 새 카테고리 객체 반환
-      setCategories([...categories, newCategory]); // 기존 상태에 새 카테고리 추가
-      setSelectedCategory(newCategory.c_id); // 새로 추가된 카테고리를 선택
-      onSelect(newCategory.c_id); //부모로 전달
+      console.log("새 카테고리 추가: ", newCategory);
+
+      //setCategories([...categories, newCategory]); // 기존 상태에 새 카테고리 추가
+      setCategories((prevCategories) => {
+        const updatedCategories = [...prevCategories, newCategory]
+        return updatedCategories;
+      });
+
+      //상태 변화 이후 바로 반영되도록 보장  
+      setTimeout(() => {
+        setSelectedCategory(newCategory.c_id); // 새로 추가된 카테고리를 선택
+        onSelect(newCategory.c_id); //부모로 전달
+      }, 0);
+      
       setIsEditing(false);
     }catch(error){
       console.error("Error adding category:", error);
@@ -167,7 +179,7 @@ const Category = ({
           <span onClick={toggleDropdown}>
             {selectedCategory
               ? categories.find((cat)=> cat.c_id === selectedCategory)?.c_name
-              : "카네고리를 선택하세요"}
+              : "카테고리를 선택하세요"}
           </span>
         )}
         <span onClick={toggleDropdown}>{isOpen ? "▲" : "▼"}</span>
