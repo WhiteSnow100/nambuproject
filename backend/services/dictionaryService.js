@@ -1,33 +1,38 @@
-const dictionarydDao = require("../dao/dictionarydDao");
+const dictionarydDao = require("../dao/dictionaryDao");
 
-const upsertWord = async (data) => {
-  return await dictionarydDao.upsertWord(data);
+const upsertDictionary = async (data) => {
+  return await dictionarydDao.upsertDictionary(data);
 };
 
-const updateWord = async (email, word, data) => {
-  return await dictionarydDao.updateWord(email, word, data);
+const createDictionary = async (data) => {
+  return await dictionarydDao.createDictionary(data);
 };
 
-const fetchWordByEmail = async (email, word) => {
+const updateDictionary = async (email, word, data) => {
+  return await dictionarydDao.updateDictionary(email, word, data);
+};
+
+const findWordByEmail = async (email, word) => {
   try {
-    return await dictionarydDao.fetchWordByEmail(email, word);
+    return await dictionarydDao.findWordByEmail(email, word);
   } catch (error) {
     console.error("fetchWordByEmail 오류:", error.message);
   }
 };
 
-const fetchAllbyCategory = async (email, c_id) => {
-  return await dictionarydDao.fetchAllbyCategory(email, c_id);
+const findAllbyCategory = async (email, c_id, id) => {
+  return await dictionarydDao.findAllbyCategory(email, c_id, id);
 };
 
-const deleteWord = async (email, word) => {
-  return await dictionarydDao.deleteWord(email, word);
+const deleteDictionary = async (id) => {
+  return await dictionarydDao.deleteDictionary(id);
 };
 
 module.exports = {
-  upsertWord,
-  updateWord,
-  fetchWordByEmail,
-  fetchAllbyCategory,
-  deleteWord,
+  upsertDictionary,
+  createDictionary,
+  updateDictionary,
+  findWordByEmail,
+  findAllbyCategory,
+  deleteDictionary,
 };

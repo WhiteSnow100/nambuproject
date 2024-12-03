@@ -46,7 +46,7 @@ const UserEdit = () => {
   }  
 
   return (
-    <div className="page-container">
+    <div>
             <TabMenu />      
     <Card 
         sx={{

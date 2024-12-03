@@ -19,6 +19,8 @@ const Word = () => {
   const [des, setDes] = useState("");
   const [c_id, setC_id] = useState("");
   const [memo, setMemo] = useState("");
+  const [input_type, setInput_type] = useState(1);
+
   // const { user, logout } = useAuth();
   const { handlefetchWord, handleAddWord, handleinitButton } = useWord();
 
@@ -26,8 +28,8 @@ const Word = () => {
     e.preventDefault();
     if (!word || !des) return;
     const { des_json, url } = "";
-    const input_type = 1;
     const newWord = { word, des, des_json, c_id, memo, url, input_type };
+    console.log(" AddWord Data display >>>>>>>>>>", newWord);
     handleAddWord(newWord);
   };
 
@@ -58,6 +60,7 @@ const Word = () => {
       setWord(speechText);
       //2. gpt
       handlechatGpt(speechText);
+      setInput_type(2);
     } catch (error) {
       console.log("오류 발생:", error);
     }
@@ -77,12 +80,26 @@ const Word = () => {
 
   useEffect(() => {
     // for test
-    setWord("조회항목");
+    setWord("말모이");
   }, []);
 
   return (
-    <Grid container spacing={2} component="form" onSubmit={handleSubmit}>
-      <Grid size={6} sx={{ mt: 5, ml: 25 }}>
+    <Grid
+      container
+      spacing={2}
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        height: "80vh", // Full viewport height
+        width: "90vw",
+        display: "flex", // Use Flexbox for alignment
+        justifyContent: "center", // Center horizontally
+        alignItems: "center", // Center vertically
+        ml: 10,
+        mt: 4,
+      }}
+    >
+      <Grid size={8}>
         <TextField
           id="word-input"
           label="word"
@@ -94,13 +111,16 @@ const Word = () => {
             },
           }}
           value={word}
-          onChange={(e) => setWord(e.target.value)}
+          onChange={(e) => {
+            setWord(e.target.value);
+            setInput_type(1);
+          }}
         />
       </Grid>
-      <Grid sx={{ mt: 6 }}>
+      <Grid size={1}>
         <AudioRecorder onAudioCaptured={handleAudioCatured}></AudioRecorder>
       </Grid>
-      <Grid size={3} sx={{ mt: 6, ml: 5, mr: 5 }}>
+      <Grid size={3}>
         <Stack spacing={2} direction="row">
           <Button
             onClick={(e) => {
@@ -112,19 +132,20 @@ const Word = () => {
             chatGpt 조회
           </Button>
           <Button
+            variant="outlined"
+            sx={{ width: "150px" }}
             onClick={async (e) => {
+              console.log("전송전 word 조회 >>", word);
               const data = await handlefetchWord(word);
               console.log("조회후 dictionary data 수신 >>", data);
               handleDisplay(data);
             }}
-            variant="outlined"
-            sx={{ width: "150px" }}
           >
             내 사전 조회
           </Button>
         </Stack>
       </Grid>
-      <Grid size={10} sx={{ mt: 2, ml: 25 }}>
+      <Grid size={12}>
         <TextField
           id="des-input"
           label="des"
@@ -140,7 +161,7 @@ const Word = () => {
           onChange={(e) => setDes(e.target.value)}
         />
       </Grid>
-      <Grid size={6} sx={{ mt: 2, ml: 25 }}>
+      <Grid size={6}>
         <Select
           id="category"
           fullWidth
@@ -172,7 +193,7 @@ const Word = () => {
         </Select>
       </Grid>
       <Grid size={6}></Grid>
-      <Grid size={10} sx={{ mt: 1, ml: 25 }}>
+      <Grid size={12}>
         <TextField
           id="memo-input"
           label="memo"
@@ -188,9 +209,9 @@ const Word = () => {
           onChange={(e) => setMemo(e.target.value)}
         />
       </Grid>
-      <Grid size={12} sx={{ mt: 1, ml: 100 }}>
+      <Grid item>
         <Stack spacing={2} direction="row">
-          <Button type="submit" variant="contained" sx={{ width: "130px" }}>
+          <Button type="submit" variant="contained" sx={{ width: "150px" }}>
             저장
           </Button>
           <Button
@@ -200,7 +221,7 @@ const Word = () => {
               handleDisplay(data);
             }}
             variant="outlined"
-            sx={{ width: "130px" }}
+            sx={{ width: "150px" }}
           >
             초기화
           </Button>

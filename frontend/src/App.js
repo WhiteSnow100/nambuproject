@@ -7,13 +7,12 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import LogoutPage from "./pages/LogoutPage";
 
-import User from "./pages/UserPage"; 
+// import User from "./pages/UserPage"; 
 
 import WordPage from "./pages/WordPage";
-import Word from "./components/Word";
 import Challenge from "./pages/Challenge";
-import Dictionary from "./pages/Dictionary";
-import UserEditPage from "./pages/UserEditPage";
+import DictionaryPage from "./pages/DictionaryPage";
+import User from "./pages/UserEditPage";
 
 import Header from "./components/Header";
 import { AuthProvider } from "./context/AuthContext";
@@ -43,11 +42,9 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} /> 
           <Route path="/logout" element={<LogoutPage />} /> 
           <Route path="/challenge" element={<Challenge />} />
-          <Route path="/dictionary" element={<Dictionary />} />
-          <Route path="/word" element={<Word />} />
-          <Route path="/wordPage" element={<WordPage />} />
+          <Route path="/dictionary" element={<DictionaryPage />} /> 
+          <Route path="/word" element={<WordPage />} />
           <Route path="/user" element={<User />} />
-          <Route path="/edit-profile" element={<UserEditPage />} /> 
         </Routes>
       </Router>
       </ThemeProvider>

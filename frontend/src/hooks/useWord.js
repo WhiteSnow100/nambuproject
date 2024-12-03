@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import {
   fetchWord,
-  chatGpt,
   addWord,
   deleteWord,
+  fetchAllbyCategory,
 } from "../services/wordService";
 
 export const useWord = () => {
   const handlefetchWord = async (word) => {
     try {
+      console.log("handlefetchWord>>>>>>>", word);
       const data = await fetchWord(word);
       return data;
     } catch (error) {
@@ -16,15 +17,15 @@ export const useWord = () => {
     }
   };
 
-  // const handlechatGpt = async (word) => {
-  //   try {
-  //     const data = await chatGpt(word);
-  //     //서버에서 받아온 데이타 object 형태로 변경??
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error chatGpt Answer:", error);
-  //   }
-  // };
+  const handlefetchCategory = async (c_id, id) => {
+    try {
+      console.log("2. handlefetchCategory >>>>>>>>>", c_id, id);
+      const data = await fetchAllbyCategory(c_id, id);
+      return data;
+    } catch (error) {
+      console.error("Error fetching AllbyCategory:", error);
+    }
+  };
 
   const handleAddWord = async (newWord) => {
     try {
@@ -35,11 +36,19 @@ export const useWord = () => {
     }
   };
 
-  const handleDeleteWord = async (word) => {
+  const handleDeleteWord = async (id, prevCardsData) => {
     try {
-      await deleteWord(word);
+      console.log("handleDeleteWord>>>>>>>", id);
+
+      await deleteWord(id);
+
+      const updatedCardsData = prevCardsData.filter((card) => card.id !== id);
+
+      console.log("handleDeleteWord nextCardsData", updatedCardsData);
+      return updatedCardsData;
     } catch (error) {
       console.error("Error deleting word:", error);
+      throw error;
     }
   };
 
@@ -61,9 +70,9 @@ export const useWord = () => {
 
   return {
     handlefetchWord,
-    // handlechatGpt,
     handleAddWord,
     handleDeleteWord,
     handleinitButton,
+    handlefetchCategory,
   };
 };

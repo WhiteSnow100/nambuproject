@@ -4,7 +4,7 @@ import Dictionary from "../components/Dictionary";
 
 const DictionaryPage = () => {
   return (
-    <div className="page-container">
+    <div>
       <TabMenu />
       <Dictionary />
     </div>

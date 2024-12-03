@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Grid2,
   Card,
@@ -14,55 +14,131 @@ import {
   MenuItem,
   Button,
   Stack,
+  Pagination,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import { green, pink, red } from "@mui/material/colors";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
-import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import HelpIcon from "@mui/icons-material/Help";
+import { useWord } from "../hooks/useWord";
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-  variants: [
-    {
-      props: ({ expand }) => !expand,
-      style: {
-        transform: "rotate(0deg)",
-      },
-    },
-    {
-      props: ({ expand }) => !!expand,
-      style: {
-        transform: "rotate(180deg)",
-      },
-    },
-  ],
-}));
+const CARDS_PER_PAGE = 5;
 
 const Dictionary = () => {
-  const [c_id, setC_id] = useState("");
-  const [word, setWord] = useState("React란");
-  const [des, setDes] = useState("");
-  const [expanded, setExpanded] = useState(false);
+  const { handlefetchCategory, handleDeleteWord } = useWord();
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const [c_id, setC_id] = useState(0);
+  const [id, setID] = useState(null);
+  // Card을 backend 배열만큼 생성하려고 함
+  const cardsData = useRef([]);
+  // const [cardsData, setCardsData] = useState([]);
+  const [currentData, setCurrentData] = useState([]);
+  const [expandedCard, setExpandedCard] = useState(null);
+  const [totalPages, setTotalPages] = useState(1); // page 갯수
+  const [currentPage, setCurrentPage] = useState(1);
+
+  //초기 빈 카드 하나 출력
+  useEffect(() => {
+    const data = [
+      {
+        id: 1,
+        word: "내 사전에 오신걸 환영합니다.",
+        c_date: Date(),
+        memo: "'내 사전 조회' 버튼을 눌러주세요",
+        level: 0,
+        des: "사용법 테스트 자료입니다.",
+      },
+    ];
+    setCurrentData(data); // Assuming `data` is an array
+  }, []);
+
+  const handleCardClick = (id) => {
+    setID(id);
+  };
+
+  const handlePagecount = (length) => {
+    // 1페이지에 카드 5장씩 출력
+    let pagecount = Math.ceil(length / CARDS_PER_PAGE);
+    setTotalPages(pagecount);
+  };
+
+  const handlePageChange = (page, dictionarysData) => {
+    console.log("전달된 페이지 숫자>>>>>>>>", page);
+    setCurrentPage(page);
+    console.log("handlePageChange currentPage >>>>>>", currentPage);
+    handleCurrentData(dictionarysData, page);
+  };
+
+  const handleCurrentData = (dictionarysData, page) => {
+    const currentCards = dictionarysData.slice(
+      (page - 1) * CARDS_PER_PAGE,
+      page * CARDS_PER_PAGE
+
+      //   (currentPage - 1) * CARDS_PER_PAGE,
+      //   currentPage * CARDS_PER_PAGE
+    );
+    console.log("handleCurrentData currentCards >>>>>", currentCards);
+    setCurrentData(currentCards);
+  };
+
+  const handleIconByLevel = (level) => {
+    switch (level) {
+      case 10:
+        return <SentimentVeryDissatisfiedIcon fontSize="large" />;
+      case 5:
+        return <SentimentNeutralIcon fontSize="large" />;
+      case 0:
+        return <SentimentVerySatisfiedIcon fontSize="large" />;
+      default:
+        return <HelpIcon fontSize="large" />;
+    }
+  };
+
+  const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme }) => ({
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+    variants: [
+      {
+        props: ({ expand }) => !expand,
+        style: {
+          transform: "rotate(0deg)",
+        },
+      },
+      {
+        props: ({ expand }) => !!expand,
+        style: {
+          transform: "rotate(180deg)",
+        },
+      },
+    ],
+  }));
+
+  const handleExpandClick = (index) => {
+    setExpandedCard(expandedCard === index ? null : index);
   };
 
   return (
     <div>
-      <Grid2 container spacing={2}>
-        <Grid2 size={6} sx={{ mt: 5, ml: 25 }}>
+      <Grid2
+        container
+        spacing={2}
+        sx={{
+          //width: "90vw",
+          display: "flex", // Use Flexbox for alignment
+          justifyContent: "center", // Center horizontally
+          alignItems: "centerflex-start", // Center vertically
+          mt: 4,
+        }}
+      >
+        <Grid2 item size={6} sx={{ ml: 3 }}>
           <Select
             id="category"
             fullWidth
@@ -85,7 +161,7 @@ const Dictionary = () => {
               },
             }}
           >
-            <MenuItem value="">조회할 카테고리 선택해 주세요.</MenuItem>
+            <MenuItem value={0}>조회할 카테고리 선택해 주세요.</MenuItem>
             <MenuItem value={1}>프로그래밍</MenuItem>
             <MenuItem value={2}>상식</MenuItem>
             <MenuItem value={3}>문학</MenuItem>
@@ -93,22 +169,37 @@ const Dictionary = () => {
             <MenuItem value={5}>꽃나무이름</MenuItem>
           </Select>
         </Grid2>
-        <Grid2 size={3} sx={{ mt: 6, ml: 5, mr: 5 }}>
+
+        <Grid2 item sx={{ mt: 1, ml: 2 }}>
           <Stack spacing={2} direction="row">
             <Button
-              onClick={(e) => {
-                // const data = handlechatGpt(word);
-              }}
               variant="contained"
               sx={{ width: "150px" }}
+              onClick={async (e) => {
+                console.log("1. input c_id, id 번호 >>>>>>>", c_id, id);
+                const dictionarysData = await handlefetchCategory(c_id, id);
+                console.log(
+                  "조회후 dictionary category group data 수신 >>",
+                  dictionarysData
+                );
+                // setCardsData(dictionarysData);
+                cardsData.current = dictionarysData;
+                handlePageChange(1, dictionarysData);
+                // await handleCurrentData(dictionarysData,1);
+                handlePagecount(dictionarysData.length);
+              }}
             >
               내 사전 조회
             </Button>
             <Button
               onClick={async (e) => {
-                // const data = await handlefetchWord(word);
-                // console.log("조회후 dictionary data 수신 >>", data);
-                // handleDisplay(data);
+                // 삭제한 데이타 성공여부 조회 필요
+                const data = await handleDeleteWord(id, cardsData);
+                // const dictionarysData = await handlefetchCategory(c_id, id);
+                console.log("delete후 data 수신 >>>>>>>>>>>", data);
+                cardsData.current = data;
+                handlePageChange(1, data);
+                handlePagecount(data.length);
               }}
               variant="outlined"
               sx={{ width: "150px" }}
@@ -117,346 +208,104 @@ const Dictionary = () => {
             </Button>
           </Stack>
         </Grid2>
-        <Grid2 size={3} sx={{ mt: 3, ml: 5 }} pacing={1}>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ bgcolor: red[500] }} aria-label="number">
-                  1
-                </Avatar>
-              }
-              // action={     // 기능 사용하게 있을지 고민 필요
-              //   <IconButton aria-label="settings">
-              //     <MoreVertIcon />
-              //   </IconButton>
-              // }
-              title={`${word}`}
-              subheader="2024-11-24"
-            />
-            <CardMedia
-              component="img"
-              height="150"
-              image="./logo192.png"
-              alt={`${word}_img`}
-            />
-            <CardContent>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                React라는 용어를 chatGpt를 통해 문의하여 저장해 두었던
-                사전입니다.
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="level">
-                <SentimentVeryDissatisfiedIcon />
-              </IconButton>
-              {/* <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton> */}
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
-              >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
+      </Grid2>
+
+      {/* 컨텐츠 */}
+      <Grid2
+        container
+        spacing={2}
+        sx={{
+          justifyContent: "center",
+          mt: 8,
+        }}
+      >
+        {currentData.map((card, index) => (
+          // {currentData.map((card, index) => (
+          <Grid2 item key={index} size={2.3}>
+            <Card
+              onClick={() => setID(card.id)}
+              sx={{
+                maxWidth: 345,
+                cursor: "pointer",
+                border: id === card.id ? "3px solid blue" : "1px solid gray",
+                // boxShadow: id === card.id ? "0 0 10px gray" : "none",
+              }}
+            >
+              <CardHeader
+                avatar={
+                  <Avatar sx={{ bgcolor: red[500] }} aria-label="number">
+                    {parseInt(card.rowNum, 10) - 1 + 1}
+                  </Avatar>
+                }
+                title={card.word}
+                subheader={card.c_date}
+              />
+              <CardMedia
+                component="img"
+                height="150"
+                image={card.image || "./logo192.png"} // Use default if image is missing
+                alt={`${card.word}_img`}
+              />
               <CardContent>
-                <Typography sx={{ marginBottom: 2 }}>Method:</Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  React는 Facebook(현재 Meta Platforms)에 의해 개발된 오픈 소스
-                  자바스크립트 라이브러리로, 사용자 인터페이스(UI)를 구축하기
-                  위해 사용됩니다. React는 컴포넌트 기반 아키텍처를 기반으로
-                  하며, 이를 통해 대규모 애플리케이션의 UI를 모듈화하고 재사용
-                  가능하게 설계할 수 있습니다.
-                </Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  주요 특징은 다음과 같습니다: 1. **컴포넌트 기반**: UI를
-                  독립적인 컴포넌트 단위로 나누어 설계할 수 있습니다. 각
-                  컴포넌트는 자체적인 상태와 로직을 가질 수 있어 관리가
-                  용이합니다. 2. **가상 DOM(Virtual DOM)**: React는 변경 사항이
-                  실제 DOM에 반영되기 전에 가상 DOM을 통해 변경을 먼저
-                  처리하므로, 실제 DOM 조작 횟수를 최소화하여 성능을
-                  최적화합니다. 3. **단방향 데이터 바인딩**: 데이터의 흐름이
-                  위에서 아래로 일정하게 유지되어 데이터의 변화를 예측하기 쉽고
-                  디버깅이 용이합니다. 4. **JSX**: JavaScript를 확장한 문법으로,
-                  HTML과 유사한 코드를 사용하여 자바스크립트 파일 안에 UI
-                  컴포넌트를 정의할 수 있습니다.
-                </Typography>
-                {/* <Typography sx={{ marginBottom: 2 }}>
-                  Add rice and stir very gently to distribute. Top with
-                  artichokes and peppers, and cook without stirring, until most
-                  of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                  medium-low, add reserved shrimp and mussels, tucking them down
-                  into the rice, and cook again without stirring, until mussels
-                  have opened and rice is just tender, 5 to 7 minutes more.
-                  (Discard any mussels that don&apos;t open.) */}
-                {/* </Typography> */}
-                <Typography>
-                  React는 단순한 뷰 라이브러리로 시작했지만, 현대 웹 개발에서
-                  매우 중요한 역할을 차지하고 있으며, 다양한 도구와 생태계가
-                  이를 보완하여 하나의 완벽한 프레임워크처럼 사용되기도 합니다.
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  {card.memo}
                 </Typography>
               </CardContent>
-            </Collapse>
-          </Card>
-        </Grid2>
-        <Grid2 size={3} sx={{ mt: 3, ml: 1 }} pacing={1}>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ bgcolor: red[500] }} aria-label="number">
-                  2
-                </Avatar>
-              }
-              // action={     // 기능 사용하게 있을지 고민 필요
-              //   <IconButton aria-label="settings">
-              //     <MoreVertIcon />
-              //   </IconButton>
-              // }
-              title={`${word}`}
-              subheader="2024-11-24"
-            />
-            <CardMedia
-              component="img"
-              height="150"
-              image="./react.png"
-              alt={`${word}_img`}
-            />
-            <CardContent>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                React라는 용어를 chatGpt를 통해 문의하여 저장해 두었던
-                사전입니다.
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="level">
-                {/* <FavoriteIcon /> */}
-                <SentimentVerySatisfiedIcon />
-              </IconButton>
-              {/* <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton> */}
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
+              <CardActions
+                disableSpacing
+                sx={{ justifyContent: "space-between" }}
               >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                <Typography sx={{ marginBottom: 2 }}>Method:</Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  React는 Facebook(현재 Meta Platforms)에 의해 개발된 오픈 소스
-                  자바스크립트 라이브러리로, 사용자 인터페이스(UI)를 구축하기
-                  위해 사용됩니다. React는 컴포넌트 기반 아키텍처를 기반으로
-                  하며, 이를 통해 대규모 애플리케이션의 UI를 모듈화하고 재사용
-                  가능하게 설계할 수 있습니다.
-                </Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  주요 특징은 다음과 같습니다: 1. **컴포넌트 기반**: UI를
-                  독립적인 컴포넌트 단위로 나누어 설계할 수 있습니다. 각
-                  컴포넌트는 자체적인 상태와 로직을 가질 수 있어 관리가
-                  용이합니다. 2. **가상 DOM(Virtual DOM)**: React는 변경 사항이
-                  실제 DOM에 반영되기 전에 가상 DOM을 통해 변경을 먼저
-                  처리하므로, 실제 DOM 조작 횟수를 최소화하여 성능을
-                  최적화합니다. 3. **단방향 데이터 바인딩**: 데이터의 흐름이
-                  위에서 아래로 일정하게 유지되어 데이터의 변화를 예측하기 쉽고
-                  디버깅이 용이합니다. 4. **JSX**: JavaScript를 확장한 문법으로,
-                  HTML과 유사한 코드를 사용하여 자바스크립트 파일 안에 UI
-                  컴포넌트를 정의할 수 있습니다.
-                </Typography>
-                {/* <Typography sx={{ marginBottom: 2 }}>
-                  Add rice and stir very gently to distribute. Top with
-                  artichokes and peppers, and cook without stirring, until most
-                  of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                  medium-low, add reserved shrimp and mussels, tucking them down
-                  into the rice, and cook again without stirring, until mussels
-                  have opened and rice is just tender, 5 to 7 minutes more.
-                  (Discard any mussels that don&apos;t open.) */}
-                {/* </Typography> */}
-                <Typography>
-                  React는 단순한 뷰 라이브러리로 시작했지만, 현대 웹 개발에서
-                  매우 중요한 역할을 차지하고 있으며, 다양한 도구와 생태계가
-                  이를 보완하여 하나의 완벽한 프레임워크처럼 사용되기도 합니다.
-                </Typography>
-              </CardContent>
-            </Collapse>
-          </Card>
-        </Grid2>
-        <Grid2 size={3} sx={{ mt: 3, ml: 1 }} pacing={1}>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ bgcolor: red[500] }} aria-label="number">
-                  3
-                </Avatar>
-              }
-              // action={     // 기능 사용하게 있을지 고민 필요
-              //   <IconButton aria-label="settings">
-              //     <MoreVertIcon />
-              //   </IconButton>
-              // }
-              title={`${word}`}
-              subheader="2024-11-24"
-            />
-            <CardMedia
-              component="img"
-              height="150"
-              image="./react.png"
-              alt={`${word}_img`}
-            />
-            <CardContent>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                React라는 용어를 chatGpt를 통해 문의하여 저장해 두었던
-                사전입니다.
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="level">
-                <SentimentNeutralIcon />
-              </IconButton>
-              {/* <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton> */}
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
+                <IconButton aria-label="level">
+                  {handleIconByLevel(card.level)}
+                </IconButton>
+                <ExpandMore
+                  expand={expandedCard === index}
+                  onClick={() => handleExpandClick(index)}
+                  aria-expanded={expandedCard === index}
+                  aria-label="show more"
+                >
+                  <ExpandMoreIcon />
+                </ExpandMore>
+              </CardActions>
+              <Collapse
+                in={expandedCard === index}
+                timeout="auto"
+                unmountOnExit
               >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                <Typography sx={{ marginBottom: 2 }}>Method:</Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  React는 Facebook(현재 Meta Platforms)에 의해 개발된 오픈 소스
-                  자바스크립트 라이브러리로, 사용자 인터페이스(UI)를 구축하기
-                  위해 사용됩니다. React는 컴포넌트 기반 아키텍처를 기반으로
-                  하며, 이를 통해 대규모 애플리케이션의 UI를 모듈화하고 재사용
-                  가능하게 설계할 수 있습니다.
-                </Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  주요 특징은 다음과 같습니다: 1. **컴포넌트 기반**: UI를
-                  독립적인 컴포넌트 단위로 나누어 설계할 수 있습니다. 각
-                  컴포넌트는 자체적인 상태와 로직을 가질 수 있어 관리가
-                  용이합니다. 2. **가상 DOM(Virtual DOM)**: React는 변경 사항이
-                  실제 DOM에 반영되기 전에 가상 DOM을 통해 변경을 먼저
-                  처리하므로, 실제 DOM 조작 횟수를 최소화하여 성능을
-                  최적화합니다. 3. **단방향 데이터 바인딩**: 데이터의 흐름이
-                  위에서 아래로 일정하게 유지되어 데이터의 변화를 예측하기 쉽고
-                  디버깅이 용이합니다. 4. **JSX**: JavaScript를 확장한 문법으로,
-                  HTML과 유사한 코드를 사용하여 자바스크립트 파일 안에 UI
-                  컴포넌트를 정의할 수 있습니다.
-                </Typography>
-                {/* <Typography sx={{ marginBottom: 2 }}>
-                  Add rice and stir very gently to distribute. Top with
-                  artichokes and peppers, and cook without stirring, until most
-                  of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                  medium-low, add reserved shrimp and mussels, tucking them down
-                  into the rice, and cook again without stirring, until mussels
-                  have opened and rice is just tender, 5 to 7 minutes more.
-                  (Discard any mussels that don&apos;t open.) */}
-                {/* </Typography> */}
-                <Typography>
-                  React는 단순한 뷰 라이브러리로 시작했지만, 현대 웹 개발에서
-                  매우 중요한 역할을 차지하고 있으며, 다양한 도구와 생태계가
-                  이를 보완하여 하나의 완벽한 프레임워크처럼 사용되기도 합니다.
-                </Typography>
-              </CardContent>
-            </Collapse>
-          </Card>
-        </Grid2>
-        <Grid2 size={3} sx={{ mt: 3, ml: 1 }} pacing={1}>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ bgcolor: red[500] }} aria-label="number">
-                  4
-                </Avatar>
-              }
-              // action={     // 기능 사용하게 있을지 고민 필요
-              //   <IconButton aria-label="settings">
-              //     <MoreVertIcon />
-              //   </IconButton>
-              // }
-              title={`${word}`}
-              subheader="2024-11-24"
+                <CardContent>
+                  <Typography sx={{ marginBottom: 2 }}>Description:</Typography>
+                  <Typography sx={{ marginBottom: 2 }}>
+                    {card.des || "추가 세부 사항 없음"}
+                  </Typography>
+                </CardContent>
+              </Collapse>
+            </Card>
+          </Grid2>
+        ))}
+      </Grid2>
+
+      {/* 페이징 */}
+      <Grid2
+        container
+        sx={{
+          // width: "80vw",
+          justifyContent: "center", // Center horizontally
+          mt: 8,
+        }}
+      >
+        <Grid2 item>
+          <Stack spacing={2}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(e, page) => {
+                console.log("pagination 현재 페이지 번호 >>>>", page);
+                handlePageChange(page, cardsData.current);
+              }}
+              color="primary"
+              fontSize="large"
             />
-            <CardMedia
-              component="img"
-              height="150"
-              image="./react.png"
-              alt={`${word}_img`}
-            />
-            <CardContent>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                React라는 용어를 chatGpt를 통해 문의하여 저장해 두었던
-                사전입니다.
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="level">
-                <SentimentVerySatisfiedIcon />
-              </IconButton>
-              {/* <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton> */}
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
-              >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                <Typography sx={{ marginBottom: 2 }}>Method:</Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  React는 Facebook(현재 Meta Platforms)에 의해 개발된 오픈 소스
-                  자바스크립트 라이브러리로, 사용자 인터페이스(UI)를 구축하기
-                  위해 사용됩니다. React는 컴포넌트 기반 아키텍처를 기반으로
-                  하며, 이를 통해 대규모 애플리케이션의 UI를 모듈화하고 재사용
-                  가능하게 설계할 수 있습니다.
-                </Typography>
-                <Typography sx={{ marginBottom: 2 }}>
-                  주요 특징은 다음과 같습니다: 1. **컴포넌트 기반**: UI를
-                  독립적인 컴포넌트 단위로 나누어 설계할 수 있습니다. 각
-                  컴포넌트는 자체적인 상태와 로직을 가질 수 있어 관리가
-                  용이합니다. 2. **가상 DOM(Virtual DOM)**: React는 변경 사항이
-                  실제 DOM에 반영되기 전에 가상 DOM을 통해 변경을 먼저
-                  처리하므로, 실제 DOM 조작 횟수를 최소화하여 성능을
-                  최적화합니다. 3. **단방향 데이터 바인딩**: 데이터의 흐름이
-                  위에서 아래로 일정하게 유지되어 데이터의 변화를 예측하기 쉽고
-                  디버깅이 용이합니다. 4. **JSX**: JavaScript를 확장한 문법으로,
-                  HTML과 유사한 코드를 사용하여 자바스크립트 파일 안에 UI
-                  컴포넌트를 정의할 수 있습니다.
-                </Typography>
-                {/* <Typography sx={{ marginBottom: 2 }}>
-                  Add rice and stir very gently to distribute. Top with
-                  artichokes and peppers, and cook without stirring, until most
-                  of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                  medium-low, add reserved shrimp and mussels, tucking them down
-                  into the rice, and cook again without stirring, until mussels
-                  have opened and rice is just tender, 5 to 7 minutes more.
-                  (Discard any mussels that don&apos;t open.) */}
-                {/* </Typography> */}
-                <Typography>
-                  React는 단순한 뷰 라이브러리로 시작했지만, 현대 웹 개발에서
-                  매우 중요한 역할을 차지하고 있으며, 다양한 도구와 생태계가
-                  이를 보완하여 하나의 완벽한 프레임워크처럼 사용되기도 합니다.
-                </Typography>
-              </CardContent>
-            </Collapse>
-          </Card>
+          </Stack>
         </Grid2>
       </Grid2>
     </div>

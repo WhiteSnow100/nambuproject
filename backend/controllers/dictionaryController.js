@@ -1,6 +1,29 @@
 const dictionaryService = require("../services/dictionaryService");
 
-const upsertWord = async (req, res) => {
+const postTypeBranch = (req, res) => {
+  console.log(" dictionaryController.js router까지는 들어옴");
+  const { type } = req.params; // 경로 매개변수 "type" 추출
+  console.log("입력된 type의 값은 무엇>>>>>>>>>>", type);
+  switch (type) {
+    case "1":
+      findWordByEmail(req, res);
+      break;
+
+    case "2":
+      findAllbyCategory(req, res);
+      break;
+
+    case "3":
+      createDictionary(req, res);
+      break;
+
+    default:
+      console.log("입력된 Type 값이 올바르지 않습니다.");
+      break;
+  }
+};
+
+const upsertDictionary = async (req, res) => {
   const { word, des, des_json, c_id, memo, url, input_type } = req.body;
   const email = "geenamam69@gmail.com"; // 테스트용 고정 이메일
 
@@ -9,7 +32,7 @@ const upsertWord = async (req, res) => {
   }
 
   try {
-    const [result, created] = await dictionaryService.upsertWord({
+    const [result, created] = await dictionaryService.upsertDictionary({
       email,
       word,
       des,
@@ -34,10 +57,47 @@ const upsertWord = async (req, res) => {
       .status(500)
       .json({ message: "CreateOrUpdateWord.", error: e.message });
   }
+
+  console.log("upsertDictionary Result >>>>>", result);
 };
 
-const fetchWordByEmail = async (req, res) => {
-  const { word } = req.query;
+const createDictionary = async (req, res) => {
+  const { word, des, des_json, c_id, memo, url, input_type } = req.body;
+  const email = "geenamam69@gmail.com"; // 테스트용 고정 이메일
+
+  if (!word || !email) {
+    return res.status(400).json({ message: "Word & Email are required." });
+  }
+
+  try {
+    console.log(
+      ">>>>>>> req.body data 검증",
+      c_id,
+      parseInt(c_id),
+      input_type,
+      parseInt(input_type)
+    );
+    const dictionary = await dictionaryService.createDictionary({
+      email: email,
+      word: word,
+      des: des,
+      des_json: des_json,
+      c_id: parseInt(c_id),
+      memo: memo,
+      url: url,
+      input_type: parseInt(input_type),
+    });
+    return res
+      .status(200)
+      .json({ message: "Word inserted successfully.", data: word });
+  } catch (e) {
+    console.error("Error in createWord:", e);
+    return res.status(500).json({ message: "CreateWord.", error: e.message });
+  }
+};
+
+const findWordByEmail = async (req, res) => {
+  const { word } = req.body;
   // const email = req.user;
   const email = "geenamam69@gmail.com";
 
@@ -46,7 +106,7 @@ const fetchWordByEmail = async (req, res) => {
   }
 
   try {
-    const dictionary = await dictionaryService.fetchWordByEmail(email, word);
+    const dictionary = await dictionaryService.findWordByEmail(email, word);
 
     if (!dictionary) {
       return res.status(404).json({
@@ -60,25 +120,32 @@ const fetchWordByEmail = async (req, res) => {
   }
 };
 
-const fetchAllbyCategory = async (req, res) => {
-  const c_id = req.body;
+const findAllbyCategory = async (req, res) => {
+  const { c_id, id } = req.body;
   // const email = req.user;
   const email = "geenamam69@gmail.com";
 
   try {
-    const dictionarys = await dictionaryService.fetchAllbyCategory(email, c_id);
-    res.status(200).json({ message: "fetch words success", data: dictionarys });
+    const dictionarys = await dictionaryService.findAllbyCategory(
+      email,
+      c_id,
+      id
+    );
+    res
+      .status(200)
+      .json({ message: "Fetch dictionarys success", data: dictionarys });
   } catch (e) {
-    res.status(500).json({ message: "fetch words error", data: e.message });
+    res
+      .status(500)
+      .json({ message: "Fetch dictionarys error", data: e.message });
   }
 };
 
-const deleteWord = async (req, res) => {
-  const word = req.body;
-  // const email = req.user;
-  const email = "geenamam69@gmail.com";
+const deleteDictionary = async (req, res) => {
   try {
-    const dictionary = await dictionaryService.deleteWord(email, word);
+    const id = req.params.id;
+    const dictionary = await dictionaryService.deleteDictionary(id);
+    console.log("Controller : deleteDictionary dictionary >>>>>", dictionary);
     res.staus(200).json({ message: "delete word success" });
   } catch (e) {
     res.status(500).json({ message: "delete word error", data: e.message });
@@ -86,8 +153,10 @@ const deleteWord = async (req, res) => {
 };
 
 module.exports = {
-  upsertWord,
-  fetchWordByEmail,
-  fetchAllbyCategory,
-  deleteWord,
+  upsertDictionary,
+  createDictionary,
+  findWordByEmail,
+  findAllbyCategory,
+  deleteDictionary,
+  postTypeBranch,
 };
