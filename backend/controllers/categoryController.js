@@ -1,71 +1,74 @@
 const categoryService = require('../services/categoryService');
 const {validationResult} = require('express-validator'); // added
-const models = require('../models'); // 모델을 불러오기
 
-const createCategory = async (req, res) => {
+const createCategory = async (req, res) => {    
+    const data = req.body;
     try{
         const errors = validationResult(req); // added 
         if(!errors.isEmpty()){ // added
             return res.status(400).json({errors: errors.array().map(e=>e.msg)});
         } // added
-        const category = await categoryService.createCategory(req.body);
-        res.status(201).json({data:category, message:'ok'});
+        const newCategory = await categoryService.createCategory(data);
+        res.status(201).json({data:newCategory, message:'ok'});
     }catch(e){
         res.status(500).json({message: e.message});
     }
 }
 
-const findCategoryByEmail = async (email) => {
-    try {
-        // 이메일을 기준으로 카테고리 찾기
-        const categorys = await models.Category.findAll({
-            where: { email: email } // 이메일로 카테고리 찾기
-        });
-        return categorys;
-    } catch (error) {
-        console.error("Error in findCategoryByEmail:", error);
-        throw error;
-    }
-};
-
-const findCategoryById = async (c_id) => {
-    try {
-        // 이메일을 기준으로 카테고리 찾기
-        const category = await models.Category.findOne({
-            where: { c_id: c_id } // 이메일로 카테고리 찾기
-        });
-        return category;
-    } catch (error) {
-        console.error("Error in findCategoryById:", error);
-        throw error;
-    }
-};
-
-const deleteCategoryByEmail = async (email) => {
+const findCategoryByEmail = async (req, res) => {
+    const {email} = req.params;
+    //const user = req.user;
     try{
-        const categorys = await categoryService.deleteCategoryByEmail(email); 
-        res.status(200).json({data: categorys, message:'ok'});
+        const categories = await categoryService.findCategoryByEmail(email); 
+        // res.status(200).json({data: categories, message:'ok'});
+        res.status(200).json({categories});
     }catch(e){
         res.status(500).json({message: e});
     }
 }
 
-const deleteCategoryById = async (c_id)  => {
+const findCategoryById = async (req, res) => {
+    const {c_id} = req.params;
     try{
-        const categorys = await categoryService.deleteCategoryById(c_id); 
-        res.status(200).json({data: categorys, message:'ok'});
+        const categories = await categoryService.findCategoryById(c_id);
+        res.status(200).json({data: categories, message:'ok'});
+    }catch(e){
+        res.status(500).json({message: e});
+    }
+}
+
+const deleteCategoryByEmail = async (req, res) => {
+    const {email} = req.params;
+    try{
+        const categories = await categoryService.deleteCategoryByEmail(email); 
+        res.status(200).json({data: categories, message:'ok'});
+    }catch(e){
+        res.status(500).json({message: e});
+    }
+}
+
+const deleteCategoryById = async (req, res) => {
+    const {c_id} = req.params;
+    try{
+        const categories = await categoryService.deleteCategoryById(c_id); 
+        res.status(200).json({data: categories, message:'ok'});
     }catch(e){
         res.status(500).json({message: e});
     }
 }
 
 const updateCategory = async (req, res) => {
+    
     try{
+        const {c_id, c_name, email} = req.body;
+        if(!c_id){
+            return res.status(400).json({message: "Category ID is required"});
+        }
         const errors = validationResult(req); // added 
         if(!errors.isEmpty()){ // added
             return res.status(400).json({errors: errors.array().map(e=>e.msg)});
         } // added
-        const category = await categoryService.updateCategory(req.body);
+        const category = await categoryService.updateCategory(c_id, {c_name, email});
         res.status(201).json({data:category, message:'ok'});
     }catch(e){
         res.status(500).json({message: e.message});

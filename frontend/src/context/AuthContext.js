@@ -5,8 +5,6 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  // const [totalword, setTotalword] = useState(0);
-  // const [zerocount, setZerocount] = useState(0);
 
   // 로그인 함수
   const login = async ({ email, pw }) => {
@@ -17,7 +15,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Login error:", error);  // 에러 로그 추가
+      throw error;  // 에러를 던져서 로그인 페이지에서 처리할 수 있도록
     }
   };
 
@@ -27,6 +26,17 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
   };
+
+  // 회원정보 수정
+  const updateUser = async (email, updatedData) => {
+    try {
+        const resp = await axiosInstance.put(`/users/${email}`, updatedData); 
+        setUser((prevUser) => ({ ...prevUser, ...updatedData }));
+        console.log('Update successful:', resp.data);
+    } catch (error) {
+        console.error('Error updating user:', error.response.data.message);
+    }
+};
 
   // 세션 복원 함수
   const restoreSession = async () => {
@@ -76,8 +86,10 @@ export const AuthProvider = ({ children }) => {
     restoreSession();
   }, []);
 
+
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

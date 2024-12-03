@@ -14,8 +14,9 @@ const Header = () => {
     const fetchUserData = async () => {
       if (user && user.email) {
         try {
-          const response = await axiosInstance.get(`/api/level/email/${user.email}`); 
-          const data = response.data[0];
+          const response = await axiosInstance.get(`/api/level/email`); 
+          // const data = response.data[0];
+          const data = response.data.data[0];
           // console.log(`header.jsx 19line ${data.total_cnt} `)
           setUserData(data); // 가져온 데이터 상태에 저장 
         } catch (error) {

@@ -5,7 +5,7 @@ const findAll = async () => {
 }
 
 const createUser = async (userData) =>{
-    // console.log(' test >>>>>>>>>>>>>.', userData    );
+    console.log(' test >>>>>>>>>>>>>.', userData    );
     return await models.User.create(userData);
 }
 

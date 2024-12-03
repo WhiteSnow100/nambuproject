@@ -4,8 +4,8 @@ const createCategory = async (categoryData) => {
     return await categoryDao.createCategory(categoryData);
 }
 
-const updateCategory = async (categoryData) => {
-    return await categoryDao.updateCategory(categoryData);
+const updateCategory = async (c_id, userData) => {
+    return await categoryDao.updateCategory(c_id, userData);
 }
 
 const deleteCategoryById = async (c_id) => {

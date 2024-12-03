@@ -18,7 +18,7 @@ const findLevelByCategory = async(req, res) => {
         if (!dictionarys) {
             return res.status(404).json({ message: 'Level not found levelController.js 19line' });
         }
-        res.status(200).json({dictionarys});
+        res.status(200).json({data: dictionarys, message:'ok'});
     }catch(e){
         console.error('Error fetching 23line levelController.js:', e.message);
         res.status(500).json({ message: 'Server error levelController.js 24line' });
@@ -28,13 +28,14 @@ const findLevelByCategory = async(req, res) => {
 const findLevelByEmail = async(req, res) => {    
     // const email = req.params.email; 
     const user = req.user;
+    // console.log(`levelcontroller.js 31line ${user.email}`)
     try{
         const dictionary = await levelService.findLevelByEmail(user.email);
-        // console.log(`levelcontroller.js 31line ${dictionary}`)
+        // console.log(`levelcontroller.js 31line ${json({dictionary})}`)
         if (!dictionary) {
             return res.status(404).json({ message: 'Level not found levelController.js 34line' });
         }
-        res.status(200).json({dictionary});
+        res.status(200).json({data: dictionary, message:'ok'});
     }catch(e){
         console.error('Error fetching 38line levelController.js:', e.message);
         res.status(500).json({ message: 'Server error' });

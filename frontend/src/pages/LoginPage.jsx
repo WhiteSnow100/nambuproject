@@ -12,6 +12,7 @@ import {
   Alert,
 } from "@mui/material";
 
+
 const SigninPage = () => {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
@@ -27,6 +28,7 @@ const SigninPage = () => {
       navigate("/"); // 로그인 성공 시 홈으로 이동
     } catch (err) {
       setError("로그인 실패: 이메일 또는 비밀번호를 확인하세요.");
+      console.error("Login failed:", err);  // 에러 로그 추가
     }
   };
 
@@ -77,7 +79,17 @@ const SigninPage = () => {
             alignItems: "center",
           }}
         >
-          <Button type="submit" variant="contained" color="primary">
+          <Button 
+            type="submit" 
+            variant="contained" 
+            sx={{
+              backgroundColor: "#1976d2",
+              color:"#fff",
+              "&:hover":{
+                backgroundColor: "#1565c0",
+              },
+            }}          
+          >
             로그인
           </Button>
           <Link to={"/signup"} style={{ textDecoration: "none" }}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuth } from "../context/AuthContext";
-import "./category.css";
+import "./Category.css";
 
 const Category = ({ 
   email,
@@ -12,45 +12,47 @@ const Category = ({
 }) => {
   const [categories, setCategories] = useState(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState(initialCategories[0] || null);
-  //const [selectedCategory, setSelectedCategory] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [showWarning, setShowWarning] = useState(false); // 경고창 상태
- 
   const { user } = useAuth();
+ 
   useEffect(()=>{    
-      const fetchCategories = async() => {   
-        const userEmail = email || user.email;   
-      if(!userEmail){
-        console.warn("Email is required but not provided.");
-        return;
-      }
-    try{
-      // console.log(`category.jsx_30 : ${userEmail}`)
-      const response = await axiosInstance.get(`/category/email`); //백엔드에서 데이터 가져오기
-      const categories = response.data.categories;
-      console.log("Fetched categories:", JSON.stringify(response.data.categories, null, 2));
-      if (!Array.isArray(categories) || categories.length === 0) {
-        console.warn("No categories found.");
-        setCategories([]);
-        return;
+    const fetchCategories = async() => {  
+      if (!user || !user.email) {
+        console.warn("User is not defined or email is missing.");
+        return; // user가 없으면 fetchCategories를 실행하지 않음
+      } 
+      const email = user.email;                
+      try{
+        const response = await axiosInstance.get(`/category/email/${email}`); //백엔드에서 데이터 가져오기
+        const categories = response.data.categories;
+        console.log("category 27번째줄:", response.data.categories);
+
+        if (!Array.isArray(categories) || categories.length === 0) {
+          console.warn("No categories found.");
+          setCategories([]);
+          return;
       }
       
-      if(Array.isArray(response.data.categories)){
-        console.log("category.jsx 24번째줄"+response.data.categories);
-        console.log("category.jsx 24번째줄", JSON.stringify(response.data.categories, null, 2));
+      if(Array.isArray(categories)){
+        console.log("category.jsx 35번째줄response.data.categories"+response.data.categories);
+        console.log("category.jsx 36번째줄JSON.strigify", JSON.stringify(response.data.categories, null, 2));
 
-        setCategories(response.data.categories); //데이터 상태 업데이트
-        if(response.data.length > 0){
-          const firstCategory = response.data.categories[0]; //첫번째 카테고리 선택
-          setSelectedCategory(firstCategory.id); //ID 저장
-          onSelect(firstCategory.id); //부모 컴포넌트에 전달
-          console.log("Selected category ID in Category:", firstCategory?.id);
+        setCategories(categories); //데이터 상태 업데이트
+        if(categories.length > 0){
+          const firstCategory = categories[0]; //첫번째 카테고리 선택
+          setSelectedCategory(firstCategory.c_id); //ID 저장
+          
+          console.log("category 47번째", firstCategory.c_id);
+
+          onSelect(firstCategory.c_id); //부모 컴포넌트에 전달
+          console.log("Selected category ID in Category:", firstCategory.c_id);
 
         }
       }else{
-        console.error("Expected an array but got:", response.data.categories);
+        console.error("Expected an array but got:", categories);
         setCategories([]); //빈 배열로 초기화
       }      
     }catch(error){
@@ -59,17 +61,17 @@ const Category = ({
   };
   
   fetchCategories();
-}, [onSelect, email]); 
+}, [onSelect, user]); 
 
   
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const selectCategory = (category) => {
-    setSelectedCategory(category.id); //ID 저장
+    setSelectedCategory(category.c_id); //ID 저장
     
-    console.log("category.jsx 66번째줄"+category.id);
+    console.log("category.jsx 66번째줄"+category.c_id);
 
-    onSelect(category.id);
+    onSelect(category.c_id);
     setIsOpen(false);
     setIsEditing(false);
   };
@@ -81,23 +83,23 @@ const Category = ({
 
   const confirmAddCategory = async () => {
     const trimmedValue = inputValue.trim();
-    const email= `${user.email}`;
+    const email= user.email;
 
     if (!trimmedValue) {
       setIsEditing(false);
       return;
     }
-    if (categories.includes(trimmedValue)) {
-      alert("이미 존재하는 목록입니다.");
-      setIsEditing(false);
-      return;
-    }
-    
-    // if (categories.some((cat) => cat.c_name === trimmedValue)) {
-    //   alert("이미 존재하는 목록입니다.");
-    //   setIsEditing(false);
-    //   return;
-    // }
+
+    // categories가 배열인지 확인하고, 배열 내부의 각 객체에 'c_name' 속성이 있는지 확인
+    if (Array.isArray(categories)) {
+      const isExistingCategory = categories.some(category => category.c_name === trimmedValue);
+
+      if (isExistingCategory) {
+        alert("이미 존재하는 목록입니다.");
+        setIsEditing(false);
+        return;      
+      } 
+    };
 
     try{
       const response = await axiosInstance.post('/category/create', {
@@ -105,11 +107,15 @@ const Category = ({
         email
       });
 
+      console.log("category.jsx 102번째줄response.data.categories", response.data.categories);
+      console.log("category.jsx 103번째줄JSON.strigify", JSON.stringify(response.data.categories, null, 2));
+      console.log("Full Response:", response.data);
+
       //백엔드에서 반환된 새로운 카테고리를 상태에 추가
-      const newCategory = response.data.categories; // 백엔드에서 새 카테고리 객체 반환
+      const newCategory = response.data; // 백엔드에서 새 카테고리 객체 반환
       setCategories([...categories, newCategory]); // 기존 상태에 새 카테고리 추가
-      setSelectedCategory(newCategory.id); // 새로 추가된 카테고리를 선택
-      onSelect(newCategory.id); //부모로 전달
+      setSelectedCategory(newCategory.c_id); // 새로 추가된 카테고리를 선택
+      onSelect(newCategory.c_id); //부모로 전달
       setIsEditing(false);
     }catch(error){
       console.error("Error adding category:", error);
@@ -126,7 +132,7 @@ const Category = ({
     try{
       await axiosInstance.delete(`/category/${selectedCategory}`); //삭제 요청
       const updatedCategories = categories.filter(
-        (cat) => cat.id !== selectedCategory
+        (cat) => cat.c_id !== selectedCategory
       );
       setCategories(updatedCategories);
       setSelectedCategory(updatedCategories[0]);
@@ -160,7 +166,7 @@ const Category = ({
         ) : (
           <span onClick={toggleDropdown}>
             {selectedCategory
-              ? categories.find((cat)=> cat.id === selectedCategory)?.c_name
+              ? categories.find((cat)=> cat.c_id === selectedCategory)?.c_name
               : "카네고리를 선택하세요"}
           </span>
         )}
@@ -173,7 +179,7 @@ const Category = ({
         <ul className="category-dropdown" style={{ top: height }}>
           {categories.map((category) => (
             <li
-              key={category.id}
+              key={category.c_id}
               className="category-item"
               onClick={() => selectCategory(category)}
             >

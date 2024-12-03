@@ -16,11 +16,12 @@ import {
 } from "@mui/material";
 import axiosInstance from "../utils/axiosInstance";
 
+
 const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [pw, setPw] = useState("");
-  const [gen, setGen] = useState(""); 
+  const [gen, setGen] = useState(1); 
   const [b_date, setB_date] = useState("");
   const navigate = useNavigate();
 
@@ -88,7 +89,7 @@ const SignupPage = () => {
             <InputLabel id="gender-label">성별</InputLabel>
             <Select
               labelId="gender-label"
-              value={gen}
+              value={gen || ""}
               onChange={(e) => setGen(e.target.value)}
             >              
               <MenuItem value="1">여성</MenuItem>
@@ -99,7 +100,7 @@ const SignupPage = () => {
             label="생년월일"
             type="date"
             fullWidth
-            value={b_date}
+            value={b_date || ""}
             onChange={(e) => setB_date(e.target.value)}
             InputLabelProps={{ shrink: true }}
             sx={{ mb: 2 }}
@@ -107,9 +108,19 @@ const SignupPage = () => {
           />                  
         </CardContent>
         <CardActions sx={{ justifyContent: "center" }}>
-          <Button type="submit" variant="contained" color="primary">
+           <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              backgroundColor: "#1976d2",
+              color:"#fff",
+              "&:hover":{
+                backgroundColor: "#1565c0",
+              },
+            }}              
+          >
             회원가입
-          </Button>
+          </Button>          
         </CardActions>
       </Box>
     </Card>

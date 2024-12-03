@@ -9,19 +9,21 @@ const createCategory = async (categoryData) => {
     return await models.Category.create(categoryData);
 } // insert category ... values ... 
 
-const updateCategory = async (c_id, categoryData) => {
-    return await models.Category.update({
-        where : {c_id: c_id}
+const updateCategory = async (c_id, userData) => {
+    return await models.Category.update(
+        userData,
+        {
+        where : {c_id: c_id},
     }); // update category set .... where c_id = c_id
 }
 
 const deleteCategoryById = async (c_id) => {
-    return await models.Category.delete({
+    return await models.Category.destroy({
         where : {c_id: c_id}
     }); // delete from category where c_id = c_id
 }
 const deleteCategoryByEmail = async (email) => {
-    return await models.Category.delete({
+    return await models.Category.destroy({
         where : {email: email}
     }); // delete from category where email = email
 }

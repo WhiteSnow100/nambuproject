@@ -1,72 +1,37 @@
 const express = require('express');
+const categoryService = require('../services/categoryService');
 const categoryController = require('../controllers/categoryController');
-const {check } = require('express-validator');
+const {check } = require('express-validator')
+//const { authenticate } = require("../middleware/auth_middleware");
 const router = express.Router();
 
-router.post('/', [
+console.log("Category routes file loaded");
+
+router.post('/create', [
     check('c_name').notEmpty().withMessage("Name is required")
 ], 
-categoryController.createCategory);
-router.put('/:c_id', [ check('c_name').notEmpty().withMessage("Name is required") ], categoryController.updateCategory);
+  categoryController.createCategory);
+router.put('/updateCategory', [ check('c_name').notEmpty().withMessage("Name is required") ], categoryController.updateCategory);
+router.delete('/:c_id', categoryController.deleteCategoryById);
+router.delete('/email/:email', categoryController.deleteCategoryByEmail);
+router.get('/:c_id', categoryController.findCategoryById);
+router.get('/email/:email', categoryController.findCategoryByEmail); 
 
-router.delete('/:c_id', async (req, res) => {
-    const { c_id } = req.params;
+router.get("/", async (req, res) => {
     try {
-        // 이메일을 기준으로 카테고리 조회
-        const category = await categoryController.findCategoryById(c_id);
-        if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
-        }
-        res.json(category); // 이메일에 해당하는 카테고리 응답
+      const email = req.query.email; // 쿼리스트링으로 이메일 받기
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+  
+      // 서비스 계층 호출
+      const categories = await categoryService.findCategoryByEmail(email); 
+      res.status(200).json({ data: categories, message: 'ok' });
     } catch (error) {
-        console.error("Error fetching category by id:", error);
-        res.status(500).json({ message: "Internal Server Error" });
+      console.error("Error fetching categories:", error);
+      res.status(500).json({ error: "Failed to fetch categories" });
     }
-}); 
-router.delete('/:email', async (req, res) => {
-    const { email } = req.params;
-    try {
-        // 이메일을 기준으로 카테고리 조회
-        const category = await categoryController.findCategoryByEmail(email);
-        if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
-        }
-        res.json(category); // 이메일에 해당하는 카테고리 응답
-    } catch (error) {
-        console.error("Error fetching category by id:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-}); 
-
-router.get('/:c_id', async (req, res) => {
-    const { c_id } = req.params;
-    try {
-        // 이메일을 기준으로 카테고리 조회
-        const category = await categoryController.findCategoryById(c_id);
-        if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
-        }
-        res.json(category); // 이메일에 해당하는 카테고리 응답
-    } catch (error) {
-        console.error("Error fetching category by id:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-}); 
-
-// '/:email' 경로로 이메일로 카테고리를 조회
-router.get('/:email', async (req, res) => {
-    const { email } = req.params;
-    try {
-        // 이메일을 기준으로 카테고리 조회
-        const categorys = await categoryController.findCategoryByEmail(email);
-        if (!categorys) {
-            return res.status(404).json({ message: 'Category not found' });
-        }
-        res.json(category); // 이메일에 해당하는 카테고리 응답
-    } catch (error) {
-        console.error("Error fetching category by email:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-});
+  });
+  
 
 module.exports = router;
