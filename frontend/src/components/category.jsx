@@ -34,7 +34,7 @@ const Category = ({
       try{
         const response = await axiosInstance.get(`/category/email/${email}`); //백엔드에서 데이터 가져오기
         const categories = response.data.categories;
-        // console.log("category 27번째줄:", response.data.categories);
+        console.log("category 27번째줄:", response.data.categories);
 
         if (!Array.isArray(categories) || categories.length === 0) {
           console.warn("No categories found.");

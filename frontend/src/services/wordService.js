@@ -25,5 +25,5 @@ export const addWord = async (newWord, accessToken) => {
 
 // 삭제
 export const deleteWord = async (id, accessToken) => {
-  await axiosInstance.delete(`/dictionary/${id}`);
+  return await axiosInstance.delete(`/dictionary/${id}`);
 };

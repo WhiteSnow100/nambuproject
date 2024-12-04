@@ -1,33 +1,31 @@
 const userDao = require('../dao/userDao');
 
-const findAll = async() => {
-    return await userDao.findAll();
+const findUserByEmail = async(email) => {
+    const result = await userDao.findUserByEmail(email);
+
+    await userDao.createLogin(email);
+    
+    return result
+}
+
+const updateUserByEmail = async(email, userData) => {
+    return await userDao.updateUserByEmail(email, userData);
+}
+
+const deleteUserByEmail = async(email) => {
+    return await userDao.deleteUserByEmail(email);
 }
 
 const createUser = async(userData) => {
     const {name, pw, email} = userData;
 
     // pw = hashpw;
-
     return await userDao.createUser(userData);
-}
+} 
 
-const findUserByEmail = async(email) => {
-    return await userDao.findUserByEmail(email);
-}
-
-const updateUser = async(email, userData) => {
-    return await userDao.updateUser(email, userData);
-}
-
-const deleteUser = async(email) => {
-    return await userDao.deleteUser(email);
-}
-
-module.exports = {
-    findAll,
-    createUser,
+module.exports = { 
     findUserByEmail,
-    updateUser,
-    deleteUser,
+    updateUserByEmail,
+    deleteUserByEmail,
+    createUser, 
 }

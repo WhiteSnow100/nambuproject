@@ -23,37 +23,46 @@ import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfi
 import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HelpIcon from "@mui/icons-material/Help";
+import moment from "moment";
+
 import { useWord } from "../hooks/useWord";
+import Category from "../components/Category";
 
 const CARDS_PER_PAGE = 5;
 
 const Dictionary = () => {
   const { handlefetchCategory, handleDeleteWord } = useWord();
 
-  const [c_id, setC_id] = useState(0);
+  const [c_id, setC_id] = useState(null);
   const [id, setID] = useState(null);
-  // Card을 backend 배열만큼 생성하려고 함
+  // Card을 backend에서 넘겨준 전체를 보관
   const cardsData = useRef([]);
   // const [cardsData, setCardsData] = useState([]);
   const [currentData, setCurrentData] = useState([]);
   const [expandedCard, setExpandedCard] = useState(null);
   const [totalPages, setTotalPages] = useState(1); // page 갯수
   const [currentPage, setCurrentPage] = useState(1);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [count, setCount] = useState(0);
 
-  //초기 빈 카드 하나 출력
+  //초기 및 조회 데이터 없을때 빈 카드 하나 출력
   useEffect(() => {
-    const data = [
-      {
-        id: 1,
-        word: "내 사전에 오신걸 환영합니다.",
-        c_date: Date(),
-        memo: "'내 사전 조회' 버튼을 눌러주세요",
-        level: 0,
-        des: "사용법 테스트 자료입니다.",
-      },
-    ];
-    setCurrentData(data); // Assuming `data` is an array
-  }, []);
+    if (shouldRender || count == 0) {
+      const data = [
+        {
+          id: 1,
+          word: "내 사전에 오신걸 환영합니다.",
+          c_date: moment().format("YYYY-MM-DD HH:mm:ss"),
+          memo: "'내 사전 조회' 버튼을 눌러주세요",
+          level: 0,
+          des: "사용법 테스트 자료입니다.",
+        },
+      ];
+      setTotalPages(1);
+      setCurrentPage(1);
+      setCurrentData(data); // Assuming `data` is an array
+    }
+  }, [shouldRender]);
 
   const handleCardClick = (id) => {
     setID(id);
@@ -66,22 +75,20 @@ const Dictionary = () => {
   };
 
   const handlePageChange = (page, dictionarysData) => {
-    console.log("전달된 페이지 숫자>>>>>>>>", page);
     setCurrentPage(page);
-    console.log("handlePageChange currentPage >>>>>>", currentPage);
     handleCurrentData(dictionarysData, page);
   };
 
   const handleCurrentData = (dictionarysData, page) => {
-    const currentCards = dictionarysData.slice(
-      (page - 1) * CARDS_PER_PAGE,
-      page * CARDS_PER_PAGE
-
-      //   (currentPage - 1) * CARDS_PER_PAGE,
-      //   currentPage * CARDS_PER_PAGE
-    );
-    console.log("handleCurrentData currentCards >>>>>", currentCards);
-    setCurrentData(currentCards);
+    if (dictionarysData.length !== 0) {
+      const currentCards = dictionarysData.slice(
+        (page - 1) * CARDS_PER_PAGE,
+        page * CARDS_PER_PAGE
+      );
+      setCurrentData(currentCards);
+    } else {
+      setShouldRender(!shouldRender);
+    }
   };
 
   const handleIconByLevel = (level) => {
@@ -139,35 +146,7 @@ const Dictionary = () => {
         }}
       >
         <Grid2 item size={6} sx={{ ml: 3 }}>
-          <Select
-            id="category"
-            fullWidth
-            displayEmpty
-            value={c_id}
-            onChange={(e) => setC_id(e.target.value)}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "black", // 기본 테두리 색상
-                  borderWidth: "2px", // 기본 테두리 두께
-                },
-                "&:hover fieldset": {
-                  borderColor: "blue", // 호버 시 테두리 색상
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "green", // 포커스 시 테두리 색상
-                  borderWidth: "3px", // 포커스 시 테두리 두께
-                },
-              },
-            }}
-          >
-            <MenuItem value={0}>조회할 카테고리 선택해 주세요.</MenuItem>
-            <MenuItem value={1}>프로그래밍</MenuItem>
-            <MenuItem value={2}>상식</MenuItem>
-            <MenuItem value={3}>문학</MenuItem>
-            <MenuItem value={4}>전화번호</MenuItem>
-            <MenuItem value={5}>꽃나무이름</MenuItem>
-          </Select>
+          <Category onSelect={setC_id} />
         </Grid2>
 
         <Grid2 item sx={{ mt: 1, ml: 2 }}>
@@ -194,8 +173,7 @@ const Dictionary = () => {
             <Button
               onClick={async (e) => {
                 // 삭제한 데이타 성공여부 조회 필요
-                const data = await handleDeleteWord(id, cardsData);
-                // const dictionarysData = await handlefetchCategory(c_id, id);
+                const data = await handleDeleteWord(id, cardsData.current);
                 console.log("delete후 data 수신 >>>>>>>>>>>", data);
                 cardsData.current = data;
                 handlePageChange(1, data);

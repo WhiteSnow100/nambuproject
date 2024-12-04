@@ -9,7 +9,6 @@ import {
 export const useWord = () => {
   const handlefetchWord = async (word) => {
     try {
-      console.log("handlefetchWord>>>>>>>", word);
       const data = await fetchWord(word);
       return data;
     } catch (error) {
@@ -19,7 +18,6 @@ export const useWord = () => {
 
   const handlefetchCategory = async (c_id, id) => {
     try {
-      console.log("2. handlefetchCategory >>>>>>>>>", c_id, id);
       const data = await fetchAllbyCategory(c_id, id);
       return data;
     } catch (error) {
@@ -29,7 +27,6 @@ export const useWord = () => {
 
   const handleAddWord = async (newWord) => {
     try {
-      console.log("handleAddWord>>>>>>>", newWord);
       await addWord(newWord);
     } catch (error) {
       console.error("Error adding word:", error);
@@ -38,14 +35,15 @@ export const useWord = () => {
 
   const handleDeleteWord = async (id, prevCardsData) => {
     try {
-      console.log("handleDeleteWord>>>>>>>", id);
-
-      await deleteWord(id);
-
-      const updatedCardsData = prevCardsData.filter((card) => card.id !== id);
-
-      console.log("handleDeleteWord nextCardsData", updatedCardsData);
-      return updatedCardsData;
+      const res = await deleteWord(id);
+      if (res.status == "204") {
+        if (!Array.isArray(prevCardsData)) {
+          console.error("prevCardsData is not an array", prevCardsData);
+          throw new Error("Invalid data: prevCardsData must be an array");
+        }
+        const updatedCardsData = prevCardsData.filter((card) => card.id !== id);
+        return updatedCardsData;
+      }
     } catch (error) {
       console.error("Error deleting word:", error);
       throw error;
@@ -62,7 +60,7 @@ export const useWord = () => {
       email: "",
       des_json: null,
       des: "",
-      c_id: "",
+      c_id: null,
       c_data: null,
     };
     return data;

@@ -28,15 +28,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   // 회원정보 수정
-  const updateUser = async (email, updatedData) => {
-    try {
-        const resp = await axiosInstance.put(`/users/${email}`, updatedData); 
-        setUser((prevUser) => ({ ...prevUser, ...updatedData }));
-        console.log('Update successful:', resp.data);
-    } catch (error) {
-        console.error('Error updating user:', error.response.data.message);
-    }
-};
+//   const updateUser = async (email, updatedData) => {
+//     try {
+//         const resp = await axiosInstance.put(`/user/${email}`, updatedData); 
+//         setUser((prevUser) => ({ ...prevUser, ...updatedData }));
+//         console.log('Update successful:', resp.data);
+//     } catch (error) {
+//         console.error('Error updating user:', error.response.data.message);
+//     }
+// };
 
   // 세션 복원 함수
   const restoreSession = async () => {
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

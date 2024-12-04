@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import TabMenu from "../components/TabMenu";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 import {
     Card,
     CardContent,
@@ -19,7 +20,7 @@ import {
 
 
 const UserEdit = () => {
-    const { user, updateUser } = useAuth(); // AuthContext에서 사용자 정보와 업데이트 함수 가져오기
+    const { user } = useAuth(); // AuthContext에서 사용자 정보와 업데이트 함수 가져오기
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [gen, setGen] = useState("");
@@ -27,23 +28,60 @@ const UserEdit = () => {
     const navigate = useNavigate();
 
   //사용자 정보 불러오기
-  useEffect(()=> {
-    console.log("User object:", user); // user 상태가 바뀔 때마다 콘솔에 찍기
-    if(user){
-      setEmail(user.email);
-      setName(user.name);
-      setGen(user.gen);
-      setB_date(user.setB_date);
-    }
-  }, [user]);  
+  // useEffect(()=> {
+  //   console.log("User object:", user); // user 상태가 바뀔 때마다 콘솔에 찍기
+  //   if(user){
+  //     setEmail(user.email);
+  //     setName(user.name);
+  //     setGen(user.gen);
+  //     setB_date(user.setB_date);
+  //   }
+  // }, [user]);  
 
-  const handleSubmit = (e) => {
+    // 사용자 정보 불러오기
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const response = await axiosInstance.get("/user"); // 사용자 정보 가져오기
+          
+          const userData = response.data.data;
+          console.log("userEditPage.jsx 48line:", userData.email); // 가져온 데이터 확인
+          setEmail(userData.email);
+          setName(userData.name);
+          setGen(userData.gen);
+          setB_date(userData.b_date);
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+          alert("사용자 정보를 불러오지 못했습니다.");
+        }
+      };
+  
+      fetchUserData();
+    }, []);
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Updated Data:", {name, gen, b_date});
+  //   updateUser(email, {name, gen, b_date});
+  //   alert("성공적으로 수정되었습니다.")
+  //   navigate("/user");
+  // }  
+
+   // 사용자 정보 업데이트
+   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated Data:", {name, gen, b_date});
-    updateUser(email, {name, gen, b_date});
-    alert("성공적으로 수정되었습니다.")
-    navigate("/user");
-  }  
+    try {
+      const updatedData = { name, gen, b_date };
+      console.log("Updating User Data:", updatedData);
+
+      await axiosInstance.put("/user", updatedData); // 사용자 정보 업데이트
+      alert("성공적으로 수정되었습니다.");
+      navigate("/user");
+    } catch (error) {
+      console.error("Failed to update user data:", error);
+      alert("정보 수정에 실패했습니다.");
+    }
+  };
 
   return (
     <div>
@@ -88,8 +126,8 @@ const UserEdit = () => {
             value={gen || ""}
             onChange={(e)=>setGen(e.target.value)}
             >
-              <MenuItem value="1">여성</MenuItem>
-              <MenuItem value="2">남성</MenuItem>
+              <MenuItem value="2">여성</MenuItem>
+              <MenuItem value="1">남성</MenuItem>
             </Select>
           </FormControl>
           <TextField   //dateField 찾아볼 것 

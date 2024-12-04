@@ -5,14 +5,15 @@ const userService = require("../services/userService");
 // sign up
 const register = async (req, res) => {
   
-  const { email, name, pw, gen } = req.body;
+  const { email, name, pw, gen, b_date } = req.body;
   const hashedPassword = await bcrypt.hash(pw, 10);
   try {
     const user = await userService.createUser({
       email: email,
       name: name,
       pw: hashedPassword,
-      gen: gen
+      gen: gen,
+      b_date: b_date
     });
     res.status(201).json({ message: "ok", data: user });
   } catch (e) {

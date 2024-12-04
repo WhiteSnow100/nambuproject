@@ -1,16 +1,13 @@
 const express = require('express');
 const userController = require('../controllers/userController');
+const { authenticate } = require("../middleware/auth_middleware");
 const router = express.Router(); 
 const { check } = require('express-validator');
 
-router.get('/', userController.findAll);
-router.post('/', [
-    check('name').notEmpty().withMessage("Name is required"),
-    check('email').notEmpty().withMessage("Email is requried")
-    .isEmail().withMessage("invalid email format")
-], userController.createUser); 
-router.put('/:email', userController.updateUser);
-router.delete('/:email', userController.deleteUser);
-router.get('/:email', userController.findUserByEmail);
+router.get('/', authenticate, userController.findUserByEmail);
+router.put('/',  [
+    check('name').notEmpty().withMessage("Name is required")
+], authenticate, userController.updateUserByEmail);
+router.delete('/', userController.deleteUserByEmail); 
 
 module.exports = router;

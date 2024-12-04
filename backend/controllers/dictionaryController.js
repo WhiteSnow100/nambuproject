@@ -1,9 +1,8 @@
 const dictionaryService = require("../services/dictionaryService");
 
 const postTypeBranch = (req, res) => {
-  console.log(" dictionaryController.js router까지는 들어옴");
   const { type } = req.params; // 경로 매개변수 "type" 추출
-  console.log("입력된 type의 값은 무엇>>>>>>>>>>", type);
+  console.log("Controller postTypeBranch type = ", type);
   switch (type) {
     case "1":
       findWordByEmail(req, res);
@@ -25,7 +24,7 @@ const postTypeBranch = (req, res) => {
 
 const upsertDictionary = async (req, res) => {
   const { word, des, des_json, c_id, memo, url, input_type } = req.body;
-  const email = "geenamam69@gmail.com"; // 테스트용 고정 이메일
+  const email = req.user.email;
 
   if (!word || !email) {
     return res.status(400).json({ message: "Word & Email are required." });
@@ -63,20 +62,14 @@ const upsertDictionary = async (req, res) => {
 
 const createDictionary = async (req, res) => {
   const { word, des, des_json, c_id, memo, url, input_type } = req.body;
-  const email = "geenamam69@gmail.com"; // 테스트용 고정 이메일
+  const email = req.user.email;
+  console.log(">>>>>>> email data 검증", email);
 
   if (!word || !email) {
     return res.status(400).json({ message: "Word & Email are required." });
   }
 
   try {
-    console.log(
-      ">>>>>>> req.body data 검증",
-      c_id,
-      parseInt(c_id),
-      input_type,
-      parseInt(input_type)
-    );
     const dictionary = await dictionaryService.createDictionary({
       email: email,
       word: word,
@@ -98,8 +91,8 @@ const createDictionary = async (req, res) => {
 
 const findWordByEmail = async (req, res) => {
   const { word } = req.body;
-  // const email = req.user;
-  const email = "geenamam69@gmail.com";
+  const email = req.user.email;
+  console.log("Controller.findWordByEmail >>>>", email);
 
   if (!word || !email) {
     return res.status(400).json({ message: "Word & Email are required." });
@@ -122,8 +115,7 @@ const findWordByEmail = async (req, res) => {
 
 const findAllbyCategory = async (req, res) => {
   const { c_id, id } = req.body;
-  // const email = req.user;
-  const email = "geenamam69@gmail.com";
+  const email = req.user.email;
 
   try {
     const dictionarys = await dictionaryService.findAllbyCategory(
@@ -144,9 +136,9 @@ const findAllbyCategory = async (req, res) => {
 const deleteDictionary = async (req, res) => {
   try {
     const id = req.params.id;
-    const dictionary = await dictionaryService.deleteDictionary(id);
-    console.log("Controller : deleteDictionary dictionary >>>>>", dictionary);
-    res.staus(200).json({ message: "delete word success" });
+    const word = await dictionaryService.deleteDictionary(id);
+    console.log("Controller : deleteDictionary dictionary >>>>>");
+    res.status(204).json({ message: "delete word success" });
   } catch (e) {
     res.status(500).json({ message: "delete word error", data: e.message });
   }

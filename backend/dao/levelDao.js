@@ -35,7 +35,9 @@ const updateLevelById = async (id, level) => {
         // console.log(`levelDao.js 21line id:${id}, level:${level}`);
     
         const result = await models.Dictionary.update(
-        { level }, // Update level column
+        { level: level,
+          u_date: new Date() // 현재 일시 추가
+         }, // Update level column
         { where: { id: Number(id) } } // Match id
         );
         return result; // Returns the number of updated rows

@@ -4,7 +4,7 @@ import axiosInstance from "../utils/axiosInstance";
 import "../components/ChallengeViewer.css";
 
 
-const ChallengeViewer = ({ dictionarys }) => {
+const ChallengeViewer = ({ dictionarys, onComplete }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const { user } = useAuth(); // AuthContext에서 이메일 가져오기
@@ -21,10 +21,15 @@ const ChallengeViewer = ({ dictionarys }) => {
 
     // 카드가 뒤집힌 상태라면 다음 카드로 이동
     if (isFlipped) {
-      setCurrentIndex((prev) => prev + 1); // 다음 카드로 이동
-      setIsFlipped(false); // 카드 초기화
+      const nextIndex = currentIndex + 1;
+      if (nextIndex >= dictionarys.length) {
+        onComplete(); // 모든 카드 완료
+      } else {
+        setCurrentIndex(nextIndex);
+      }
+      setIsFlipped(false);
     } else {
-      setIsFlipped(true); // 카드 뒤집기
+      setIsFlipped(true);
     }
   };
 
@@ -42,17 +47,21 @@ const ChallengeViewer = ({ dictionarys }) => {
             email: user.email, // email 값
         });
 
-      setCurrentIndex((prev) => prev + 1); // 다음 카드로 이동
-      setIsFlipped(false);  // 카드초기화
-      
-    } catch (error) {
-      console.error("Error updating level:", error);
-    }
-  };
+        const nextIndex = currentIndex + 1;
+        if (nextIndex >= dictionarys.length) {
+          onComplete(); // 모든 카드 완료
+        } else {
+          setCurrentIndex(nextIndex);
+        }
+        setIsFlipped(false);
+      } catch (error) {
+        console.error("Error updating level:", error);
+      }
+    };
 
-  if (currentIndex >= dictionarys.length) {
-    return <p>모든 카드를 완료했습니다!</p>;
-  }
+    if (currentIndex >= dictionarys.length) {
+      return null; // 모든 카드가 완료되었을 경우 아무것도 렌더링하지 않음
+    }
 
   const dictionary = dictionarys[currentIndex];
   const backContent = dictionary.des_json || dictionary.des;

@@ -98,7 +98,7 @@ const Header = () => {
     <header className="header">
       {user ? (
         <div className="header-left"><p>{user.email}
-        {userData && (
+        {userData && userData.total_cnt > 0 && (
                 <>
                 <span> [{userData.complete_cnt}/{userData.total_cnt}]</span>
                 <div className="stars-container">

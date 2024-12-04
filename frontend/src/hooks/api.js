@@ -7,7 +7,6 @@ const speechToText = async (audioBlob) => {
       headers: {
         "Ocp-Apim-Subscription-Key": subscriptionKey,
         "Content-Type": "audio/wav",
-        // "Content-Type": "audio/webm",
       },
       body: audioBlob,
     });
@@ -33,6 +32,7 @@ const speechToText = async (audioBlob) => {
 };
 
 const getGptResponse = async (text) => {
+  console.log("api.getGptResponse >>>>>", text);
   const apiKey = process.env.REACT_APP_API_KEY;
   const endPoint = process.env.REACT_APP_API_ENDPOINT;
   console.log(endPoint);

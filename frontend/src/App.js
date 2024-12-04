@@ -25,6 +25,9 @@ const theme = createTheme({
           backgroundColor: "inherit", // 기본 스타일 제거
           textTransform: "none", // 텍스트 대문자 변환 방지
         },
+        contained: {
+          backgroundColor: "#1976d2",
+        },
       },
     },
   },

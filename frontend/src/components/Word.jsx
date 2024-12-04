@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import AudioRecorder from "./AudioRecorder";
 import { useWord } from "../hooks/useWord";
 import { speechToText, getGptResponse } from "../hooks/api";
-// import { useAuth } from "../context/useAuthContext";
+import { useAuth } from "../context/AuthContext";
+import Category from "../components/Category";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   Button,
   Stack,
@@ -15,21 +16,29 @@ import {
 } from "@mui/material";
 
 const Word = () => {
-  const [word, setWord] = useState("");
+  const location = useLocation();
+  const searchText = location.state?.searchText || "말모이"; // 전달받은 값
+
+  const [word, setWord] = useState(searchText);
   const [des, setDes] = useState("");
-  const [c_id, setC_id] = useState("");
+  const [c_id, setC_id] = useState(null);
   const [memo, setMemo] = useState("");
   const [input_type, setInput_type] = useState(1);
 
-  // const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const { handlefetchWord, handleAddWord, handleinitButton } = useWord();
 
   const handleSubmit = (e) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
     e.preventDefault();
     if (!word || !des) return;
     const { des_json, url } = "";
     const newWord = { word, des, des_json, c_id, memo, url, input_type };
-    console.log(" AddWord Data display >>>>>>>>>>", newWord);
     handleAddWord(newWord);
   };
 
@@ -56,7 +65,6 @@ const Word = () => {
     try {
       //1. stt
       const speechText = await speechToText(audioBlob);
-      console.log("speechToText>>>>>>>", speechText);
       setWord(speechText);
       //2. gpt
       handlechatGpt(speechText);
@@ -71,17 +79,17 @@ const Word = () => {
       // gpt
       const gptResponse = await getGptResponse(word);
       setDes(gptResponse);
-      setC_id("");
+      setC_id(null);
       setMemo("");
     } catch (error) {
       console.log("chatGpt 오류 발생", error);
     }
   };
 
-  useEffect(() => {
-    // for test
-    setWord("말모이");
-  }, []);
+  // useEffect(() => {
+  //   // for test
+  //   setWord("말모이");
+  // }, []);
 
   return (
     <Grid
@@ -124,10 +132,10 @@ const Word = () => {
         <Stack spacing={2} direction="row">
           <Button
             onClick={(e) => {
-              const data = handlechatGpt(word);
+              handlechatGpt(word);
             }}
             variant="contained"
-            sx={{ width: "150px" }}
+            sx={{ width: "150px" }} //backgroundColor: "primary.main"
           >
             chatGpt 조회
           </Button>
@@ -162,35 +170,7 @@ const Word = () => {
         />
       </Grid>
       <Grid size={6}>
-        <Select
-          id="category"
-          fullWidth
-          displayEmpty
-          value={c_id}
-          onChange={(e) => setC_id(e.target.value)}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "black", // 기본 테두리 색상
-                borderWidth: "2px", // 기본 테두리 두께
-              },
-              "&:hover fieldset": {
-                borderColor: "blue", // 호버 시 테두리 색상
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "green", // 포커스 시 테두리 색상
-                borderWidth: "3px", // 포커스 시 테두리 두께
-              },
-            },
-          }}
-        >
-          <MenuItem value="">단어를 분류할 카테고리 선택해 주세요.</MenuItem>
-          <MenuItem value={1}>프로그래밍</MenuItem>
-          <MenuItem value={2}>상식</MenuItem>
-          <MenuItem value={3}>문학</MenuItem>
-          <MenuItem value={4}>전화번호</MenuItem>
-          <MenuItem value={5}>꽃나무이름</MenuItem>
-        </Select>
+        <Category onSelect={setC_id} />
       </Grid>
       <Grid size={6}></Grid>
       <Grid size={12}>

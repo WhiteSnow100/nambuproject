@@ -1,36 +1,43 @@
 const models = require('../models');
 
-const findAll = async () => {
-    return await models.User.findAll();
-}
-
-const createUser = async (userData) =>{
-    console.log(' test >>>>>>>>>>>>>.', userData    );
-    return await models.User.create(userData);
-}
-
 const findUserByEmail = async (email) => {
+    // console.log(`userDao.js 4line ${email}`)
     return await models.User.findOne({
         where : {email: email}
     });
 }
 
-const updateUser = async (email, userData) => {    
-    return await models.User.update(userData, {
+const updateUserByEmail = async (email, userData) => {   
+    // console.log(`userDao.js 11line ${userData}`) 
+    return await models.User.update({
+        ...userData, // 기존 데이터 포함
+        u_date: new Date() // 현재 일시 추가
+    }, {
         where : {email} 
     });    
 }
 
-const deleteUser = async (email) => {
+const deleteUserByEmail = async (email) => {
+    // console.log(`userDao.js 21line ${email}`) 
     return await models.User.destroy({
         where : {email}
     });
 }
 
-module.exports = {
-    findAll,
-    createUser,
+const createUser = async (userData) =>{
+    // console.log(' test >>>>>>>>>>>>>.', userData    );
+    return await models.User.create(userData);
+}
+
+const createLogin = async (email) =>{
+    // console.log(' userDao.js 33line ', email);
+    return await models.Login.create({email});
+}
+
+module.exports = { 
     findUserByEmail,
-    updateUser,
-    deleteUser,
+    updateUserByEmail,
+    deleteUserByEmail,
+    createUser,
+    createLogin,
 } 

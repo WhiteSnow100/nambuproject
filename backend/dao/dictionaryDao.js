@@ -65,7 +65,11 @@ const findAllbyCategory = async (email, c_id, id) => {
         [Sequelize.literal("ROW_NUMBER() OVER (ORDER BY id DESC)"), "rowNum"],
         "id",
         "word",
-        "c_date",
+        [
+          Sequelize.literal("TO_CHAR(c_date, 'YYYY-MM-DD HH24:MI:SS')"),
+          "c_date",
+        ],
+        // "c_date",
         "memo",
         "level",
         "des",
