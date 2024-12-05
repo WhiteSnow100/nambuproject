@@ -21,22 +21,11 @@ import {
 
 const UserEdit = () => {
     const { user } = useAuth(); // AuthContext에서 사용자 정보와 업데이트 함수 가져오기
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(user.email);
     const [name, setName] = useState("");
-    const [gen, setGen] = useState("");
+    const [gen, setGen] = useState(2);
     const [b_date, setB_date] = useState("");
     const navigate = useNavigate();
-
-  //사용자 정보 불러오기
-  // useEffect(()=> {
-  //   console.log("User object:", user); // user 상태가 바뀔 때마다 콘솔에 찍기
-  //   if(user){
-  //     setEmail(user.email);
-  //     setName(user.name);
-  //     setGen(user.gen);
-  //     setB_date(user.setB_date);
-  //   }
-  // }, [user]);  
 
     // 사용자 정보 불러오기
     useEffect(() => {
@@ -45,11 +34,15 @@ const UserEdit = () => {
           const response = await axiosInstance.get("/user"); // 사용자 정보 가져오기
           
           const userData = response.data.data;
-          // console.log("userEditPage.jsx 48line:", userData.email); // 가져온 데이터 확인
+          // console.log("userEditPage.jsx 37line:", userData.b_date); // 가져온 데이터 확인
           setEmail(userData.email);
           setName(userData.name);
           setGen(userData.gen);
-          setB_date(userData.b_date);
+          if (userData.b_date !== null) {
+            setB_date(new Date(userData.b_date).toISOString().split("T")[0]);
+          } else {
+            setB_date(userData.b_date);
+          }
         } catch (error) {
           console.error("Failed to fetch user data:", error);
           alert("사용자 정보를 불러오지 못했습니다.");
@@ -134,7 +127,6 @@ const UserEdit = () => {
           label="생년월일"
           type="date"
           fullWidth
-          defaultValue={b_date}
           value={b_date}
           onChange={(e)=>setB_date(e.target.value)}
           InputLabelProps={{shrink:true}}
