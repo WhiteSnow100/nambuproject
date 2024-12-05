@@ -25,7 +25,7 @@ const login = async (req, res) => {
   const { email, pw } = req.body;
 
   try {
-    const user = await userService.findUserByEmail(email);
+    const user = await userService.findUserByEmail2(email);
     if (!user) {
       return res.status(400).json({
         message: `Invalid email and password : ${user} ${email} ${pw}`,

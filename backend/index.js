@@ -28,7 +28,7 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.json());
 // use router
-app.use("/users", userRoute);
+app.use("/user", userRoute);
 // app.use('/posts', postRoute);
 app.use("/auth", authRoute);
 // category

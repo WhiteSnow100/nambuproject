@@ -45,7 +45,7 @@ const UserEdit = () => {
           const response = await axiosInstance.get("/user"); // 사용자 정보 가져오기
           
           const userData = response.data.data;
-          console.log("userEditPage.jsx 48line:", userData.email); // 가져온 데이터 확인
+          // console.log("userEditPage.jsx 48line:", userData.email); // 가져온 데이터 확인
           setEmail(userData.email);
           setName(userData.name);
           setGen(userData.gen);
@@ -99,7 +99,7 @@ const UserEdit = () => {
         <CardHeader
           title = {
             <Typography variant="h4" align = "center" gutterBottom>
-              회원 정보 수정
+              회원 정보
             </Typography>  
           }
         />
@@ -154,7 +154,7 @@ const UserEdit = () => {
               },
             }}              
           >
-            저장하기
+            수정하기
           </Button>
         </CardActions>
       </Box>    

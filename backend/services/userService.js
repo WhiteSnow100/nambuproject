@@ -1,6 +1,10 @@
 const userDao = require('../dao/userDao');
 
 const findUserByEmail = async(email) => {
+    return await userDao.findUserByEmail(email);
+}
+
+const findUserByEmail2 = async(email) => {
     const result = await userDao.findUserByEmail(email);
 
     await userDao.createLogin(email);
@@ -25,6 +29,7 @@ const createUser = async(userData) => {
 
 module.exports = { 
     findUserByEmail,
+    findUserByEmail2,
     updateUserByEmail,
     deleteUserByEmail,
     createUser, 

@@ -8,7 +8,7 @@ const TabMenu = () => {
       <NavLink to="/word">말입력</NavLink>
       <NavLink to="/challenge">암기</NavLink>
       <NavLink to="/dictionary">사전</NavLink>
-      <NavLink to="/user">사용자</NavLink>
+      <NavLink to="/user">회원정보</NavLink>
     </div>
   );
 };
