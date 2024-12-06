@@ -47,7 +47,7 @@ const Category = ({
       } 
       const email = user.email;                
       try{
-        const response = await axiosInstance.get(`/category/email/${email}`); //백엔드에서 데이터 가져오기
+        const response = await axiosInstance.get(`/api/category/email/${email}`); //백엔드에서 데이터 가져오기
         const categories = response.data.categories;
         console.log("category 27번째줄:", response.data.categories);
 
@@ -122,7 +122,7 @@ const Category = ({
     };
 
     try{
-      const response = await axiosInstance.post('/category/create', {
+      const response = await axiosInstance.post('/api/category/create', {
         c_name: trimmedValue, // 새 카테고리 이름 전달
         email
       });      
@@ -157,7 +157,7 @@ const Category = ({
     }
 
     try{
-      await axiosInstance.delete(`/category/${selectedCategory}`); //삭제 요청
+      await axiosInstance.delete(`/api/category/${selectedCategory}`); //삭제 요청
       const updatedCategories = categories.filter(
         (cat) => cat.c_id !== selectedCategory
       );

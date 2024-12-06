@@ -31,7 +31,7 @@ const UserEdit = () => {
     useEffect(() => {
       const fetchUserData = async () => {
         try {
-          const response = await axiosInstance.get("/user"); // 사용자 정보 가져오기
+          const response = await axiosInstance.get("/api/user"); // 사용자 정보 가져오기
           
           const userData = response.data.data;
           // console.log("userEditPage.jsx 37line:", userData.b_date); // 가져온 데이터 확인
@@ -67,7 +67,7 @@ const UserEdit = () => {
       const updatedData = { name, gen, b_date };
       console.log("Updating User Data:", updatedData);
 
-      await axiosInstance.put("/user", updatedData); // 사용자 정보 업데이트
+      await axiosInstance.put("/api/user", updatedData); // 사용자 정보 업데이트
       alert("성공적으로 수정되었습니다.");
       navigate("/user");
     } catch (error) {

@@ -28,14 +28,14 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.json());
 // use router
-app.use("/user", userRoute);
+app.use("/api/user", userRoute);
 // app.use('/posts', postRoute);
-app.use("/auth", authRoute);
+app.use("/api/auth", authRoute);
 // category
-app.use("/category", categoryRoute);
+app.use("/api/category", categoryRoute);
 //jho 추가 2024.12.03
-app.use("/word", dictionaryRoute);
-app.use("/dictionary", dictionaryRoute);
+app.use("/api/word", dictionaryRoute);
+app.use("/api/dictionary", dictionaryRoute);
 // dictionary.level
 app.use("/api/level", levelRoute);
 

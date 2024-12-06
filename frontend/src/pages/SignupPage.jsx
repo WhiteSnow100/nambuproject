@@ -34,7 +34,7 @@ const SignupPage = () => {
 
   const regist = async (data) => {
     try {
-      const resp = await axiosInstance.post("/auth/register", data);
+      const resp = await axiosInstance.post("/api/auth/register", data);
       console.log(resp);
     } catch (error) {
       console.error("Error during registration:", error);

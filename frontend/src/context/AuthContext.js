@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   // 로그인 함수
   const login = async ({ email, pw }) => {
     try {
-      const resp = await axiosInstance.post("/auth/login", { email, pw });
+      const resp = await axiosInstance.post("/api/auth/login", { email, pw });
       const { user, accessToken, refreshToken } = resp.data;
       setUser({ ...user, accessToken, refreshToken });
       localStorage.setItem("accessToken", accessToken);
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     if (!accessToken || !refreshToken) return;
 
     try {
-      const resp = await axiosInstance.post("/auth/validate", {
+      const resp = await axiosInstance.post("/api/auth/validate", {
         token: accessToken,
       });
       if (resp.data.valid) {
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       // 토큰이 유효하지 않으면 리프레시 시도
       try {
-        const resp = await axiosInstance.post("/auth/refresh", {
+        const resp = await axiosInstance.post("/api/auth/refresh", {
           refreshToken,
         });
         const { accessToken: newAccessToken } = resp.data;

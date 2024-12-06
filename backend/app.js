@@ -23,9 +23,9 @@ app.use(
 
 app.use(express.json());
 // use router
-app.use('/users', userRoute);
+app.use('/api/users', userRoute);
 // app.use('/posts', postRoute);
-app.use('/auth',  authRoute);
+app.use('/api/auth',  authRoute);
 
 
 app.listen(PORT, () => {
