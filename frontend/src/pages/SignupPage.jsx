@@ -92,8 +92,8 @@ const SignupPage = () => {
               value={gen || ""}
               onChange={(e) => setGen(e.target.value)}
             >              
-              <MenuItem value="1">여성</MenuItem>
-              <MenuItem value="2">남성</MenuItem>
+              <MenuItem value="2">여성</MenuItem>
+              <MenuItem value="1">남성</MenuItem>
             </Select>
           </FormControl> 
           <TextField

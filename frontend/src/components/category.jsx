@@ -4,10 +4,11 @@ import { useAuth } from "../context/AuthContext";
 import "./Category.css";
 
 const Category = ({ 
+  cid,
   email,
   initialCategories = [], 
   onSelect = () => {}, //기본값 추가: 부모로 선택된 ID 전달
-  width = "400px", 
+  width = "50%", 
   height = "50px" 
 }) => {
   const [categories, setCategories] = useState(initialCategories);
@@ -18,11 +19,25 @@ const Category = ({
   const [showWarning, setShowWarning] = useState(false); // 경고창 상태
   const { user } = useAuth();
  
-  useEffect(() => {
-    if (categories.length > 0 && selectedCategory == null) {
-      setSelectedCategory(categories[0].c_id);
+  // useEffect(() => {
+  //   if (categories.length > 0 && selectedCategory == null) {
+  //     setSelectedCategory(categories[0].c_id);
+  //   }
+  // }, [categories, selectedCategory]);
+
+  
+  useEffect(() => {  
+    if (categories.length > 0 ) {
+      if (cid) {
+        const matchingCategory = categories.find(category => category.c_id === cid);
+        //setSelectedCategory(categories[matchingCategory].c_id);
+        setSelectedCategory(matchingCategory ? matchingCategory.c_id : categories[0].c_id);
+      } else {
+        setSelectedCategory(categories[0].c_id);
+      }
     }
-  }, [categories, selectedCategory]);
+  }, [categories, cid]);
+    
   
   useEffect(()=>{    
     const fetchCategories = async() => {  
@@ -54,7 +69,7 @@ const Category = ({
           // console.log("category 47번째", firstCategory.c_id);
 
           onSelect(firstCategory.c_id); //부모 컴포넌트에 전달
-          // console.log("Selected category ID in Category:", firstCategory.c_id);
+          console.log("Selected category ID in Category:", firstCategory.c_id);
 
         }
       }else{
@@ -158,7 +173,7 @@ const Category = ({
   const cancelRemove = () => setShowWarning(false); // 경고창 닫기
 
   return (
-    <div className="category-container" style={{ width }}>
+    <div className="category-container" style={{width}}>
       {/* 카테고리 선택 박스 */}
       <div className="category-box" style={{ height }}>
         {isEditing ? (
