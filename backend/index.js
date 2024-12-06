@@ -42,7 +42,7 @@ app.use("/api/level", levelRoute);
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   models.sequelize
-    .sync({ force: false }) // 모델을 테이블로 생성 force: false 면 if not exists
+    .sync({ force: true }) // 모델을 테이블로 생성 force: false 면 if not exists
     .then(() => {
       // 모델 생성 성공 시, db 객체 연결 성공시
       console.log(`db connected`);
