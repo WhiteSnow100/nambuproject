@@ -1,0 +1,18 @@
+html, body {
+    margin: 0;
+    height: 100%;
+  }
+  
+  .useredit-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 위쪽에 배치 */
+    align-items: center;
+    height: calc(100vh - 60px); /* 헤더 높이를 제외한 영역 */
+    padding-top: 20px; /* 화면 위쪽 여백 추가 */
+    min-width: 480px;
+    background: url(/public/bg4.jpg) no-repeat center center fixed;
+    background-size: cover;
+    overflow-y: auto; /* 화면이 작아지면 스크롤 허용 */
+  }
+  

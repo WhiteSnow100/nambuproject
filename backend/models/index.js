@@ -9,6 +9,10 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
+// console.log('DB_HOST:', process.env.DB_HOST);
+// console.log('DB_USER:', process.env.MY_DB_USERNAME);
+// console.log('DB_NAME:', process.env.DB_NAME);
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -42,4 +46,13 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connected to the database:', process.env.DB_HOST);
+  })
+  .catch((error) => {
+    console.error('Database connection failed:', error);
+  });
+  
 module.exports = db;

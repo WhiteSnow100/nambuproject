@@ -83,11 +83,8 @@ const SigninPage = () => {
             type="submit" 
             variant="contained" 
             sx={{
-              backgroundColor: "#1976d2",
+              backgroundColor: "rgb(202, 110, 99)", 
               color:"#fff",
-              "&:hover":{
-                backgroundColor: "#1565c0",
-              },
             }}          
           >
             로그인

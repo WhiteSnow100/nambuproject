@@ -33,5 +33,23 @@ router.get("/", async (req, res) => {
     }
   });
   
+  const categoryDao = require('../dao/categoryDao');
+
+router.delete('/:c_id', async (req, res) => {
+    const { c_id } = req.params;
+
+    try {
+        const result = await categoryDao.deleteCategoryById(c_id);
+        if (result) {
+            return res.status(200).json({ message: "Category and related data deleted successfully." });
+        } else {
+            return res.status(404).json({ message: "Category not found." });
+        }
+    } catch (error) {
+        console.error("Error deleting category:", error);
+        return res.status(500).json({ error: "An error occurred while deleting the category." });
+    }
+});
+
 
 module.exports = router;

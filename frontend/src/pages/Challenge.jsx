@@ -4,6 +4,7 @@ import Category from "../components/Category";
 import ChallengeViewer from "../components/ChallengeViewer";
 import axiosInstance from "../utils/axiosInstance";
 import "./Challenge.css"
+import { Button } from "@mui/material";
 
 const Challenge = () => {
   const [c_id, setCategoryId] = useState(null);
@@ -39,6 +40,7 @@ const Challenge = () => {
   // 카테고리 변경 시 완료 상태 초기화
   useEffect(() => {
     setIsComplete(false);
+    setDictionarys([])
   }, [c_id]);
   
   return (
@@ -66,8 +68,11 @@ const Challenge = () => {
           setLimit("");
         }
       }}
-    />
-    <button onClick={handleFetchData}>조회</button>
+    /> 
+    <Button 
+    variant="contained"
+    sx={{ marginLeft: "10px" }}
+    onClick={handleFetchData}>조회</Button>
   </div>
 </div>
 <div className="page-content">

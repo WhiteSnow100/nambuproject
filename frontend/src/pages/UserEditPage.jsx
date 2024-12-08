@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import TabMenu from "../components/TabMenu";
+import "./UserEditPage.css";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import {
@@ -79,6 +80,7 @@ const UserEdit = () => {
   return (
     <div>
             <TabMenu />      
+    <div className="useredit-container">        
     <Card 
         sx={{
             maxWidth: 400,
@@ -139,18 +141,16 @@ const UserEdit = () => {
             type="submit" 
             variant="contained"
             sx={{
-              backgroundColor: "#1976d2",
+              backgroundColor: "rgb(202, 110, 99)",
               color:"#fff",
-              "&:hover":{
-                backgroundColor: "#1565c0",
-              },
-            }}              
+            }}
           >
             수정하기
           </Button>
         </CardActions>
       </Box>    
     </Card>    
+  </div>  
   </div>  
   );
 };

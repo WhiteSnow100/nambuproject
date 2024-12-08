@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./SignupPage.css";
 import {
   Card,
   CardContent,
@@ -42,6 +43,7 @@ const SignupPage = () => {
   };
 
   return (
+    <div className="user-container">
     <Card
       sx={{
         maxWidth: 400,
@@ -112,11 +114,8 @@ const SignupPage = () => {
             type="submit"
             variant="contained"
             sx={{
-              backgroundColor: "#1976d2",
+              backgroundColor: "rgb(202, 110, 99)", 
               color:"#fff",
-              "&:hover":{
-                backgroundColor: "#1565c0",
-              },
             }}              
           >
             회원가입
@@ -124,6 +123,7 @@ const SignupPage = () => {
         </CardActions>
       </Box>
     </Card>
+    </div>
   );
 };
 

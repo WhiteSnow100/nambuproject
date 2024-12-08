@@ -157,7 +157,7 @@ const Category = ({
   //   }
 
   //   try{
-  //     await axiosInstance.delete(`/category/${selectedCategory}`); //삭제 요청
+  //     await axiosInstance.delete(`/api/category/${selectedCategory}`); //삭제 요청
   //     const updatedCategories = categories.filter(
   //       (cat) => cat.c_id !== selectedCategory
   //     );
@@ -170,18 +170,18 @@ const Category = ({
   // };
 
   const removeCategory = async () => {
-    if (categories.length === 1) {
-        alert("최소 한 개의 카테고리는 있어야 합니다.");
-        setShowWarning(false);
-        return;
-    }
+    // if (categories.length === 1) {
+    //     alert("최소 한 개의 카테고리는 있어야 합니다.");
+    //     setShowWarning(false);
+    //     return;
+    // }
 
     try {
         await axiosInstance.delete(`/api/category/${selectedCategory}`); // API 호출
         const updatedCategories = categories.filter(
             (cat) => cat.c_id !== selectedCategory
         );
-        setCategories(updatedCategories); // 상태 업데이트
+        setCategories(updatedCategories); 
         setSelectedCategory(updatedCategories[0]?.c_id || null); // 첫 카테고리 선택
         setShowWarning(false);
     } catch (error) {
