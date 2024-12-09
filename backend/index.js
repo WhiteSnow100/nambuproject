@@ -19,7 +19,7 @@ const PORT = 3001;
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // React 앱 주소
+    origin: "https://devleveling.com", // React 앱 주소
     methods: ["GET", "POST", "PUT", "DELETE"], // 허용할 HTTP 메서드
     credentials: true, // 쿠키, 인증 정보를 포함하려면 설정
   })
